@@ -10,7 +10,9 @@
         "dependencies": {
           "Application": "1.0.0",
           "Domain": "1.0.0",
+          "Microsoft.EntityFrameworkCore": "10.0.1",
           "Microsoft.EntityFrameworkCore.Design": "10.0.1",
+          "Microsoft.EntityFrameworkCore.Relational": "10.0.1",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "10.0.0"
         },
         "runtime": {

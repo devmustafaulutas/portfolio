@@ -5,6 +5,7 @@
 /Users/mustafaulutas/Desktop/code/personal/MustafaUlutas/portfolio-platform/apps/api/Domain/obj/Debug/net10.0/Domain.AssemblyInfoInputs.cache
 /Users/mustafaulutas/Desktop/code/personal/MustafaUlutas/portfolio-platform/apps/api/Domain/obj/Debug/net10.0/Domain.AssemblyInfo.cs
 /Users/mustafaulutas/Desktop/code/personal/MustafaUlutas/portfolio-platform/apps/api/Domain/obj/Debug/net10.0/Domain.csproj.CoreCompileInputs.cache
+/Users/mustafaulutas/Desktop/code/personal/MustafaUlutas/portfolio-platform/apps/api/Domain/obj/Debug/net10.0/Domain.sourcelink.json
 /Users/mustafaulutas/Desktop/code/personal/MustafaUlutas/portfolio-platform/apps/api/Domain/obj/Debug/net10.0/Domain.dll
 /Users/mustafaulutas/Desktop/code/personal/MustafaUlutas/portfolio-platform/apps/api/Domain/obj/Debug/net10.0/refint/Domain.dll
 /Users/mustafaulutas/Desktop/code/personal/MustafaUlutas/portfolio-platform/apps/api/Domain/obj/Debug/net10.0/Domain.pdb
