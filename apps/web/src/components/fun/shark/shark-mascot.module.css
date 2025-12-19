@@ -1,0 +1,106 @@
+.root {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 60;
+  pointer-events: none;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  pointer-events: auto;
+}
+
+.closeBtn {
+  position: absolute;
+  right: 0;
+  top: -10px;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(8px);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.bubble {
+  max-width: 220px;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 160ms ease, transform 160ms ease;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(10px);
+}
+
+.bubbleOpen {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.bubbleTitle {
+  font-weight: 650;
+  font-size: 13px;
+  margin-bottom: 2px;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.bubbleText {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.sharkWrap {
+  width: 84px;
+  height: 84px;
+  display: grid;
+  place-items: end;
+  transform-origin: 80% 80%;
+  animation: floaty 4.2s ease-in-out infinite;
+  filter: drop-shadow(0 14px 24px rgba(0, 0, 0, 0.35));
+}
+
+.sharkImg {
+  width: 84px;
+  height: 84px;
+  user-select: none;
+}
+
+.sharkPeek {
+  animation: peek 6.5s ease-in-out infinite;
+}
+
+.sharkHover {
+  transform: translateY(0) rotate(-2deg) scale(1.02);
+}
+
+.noMotion {
+  animation: none !important;
+}
+
+@keyframes floaty {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-6px) rotate(-1deg); }
+}
+
+@keyframes peek {
+  0%, 70%, 100% { transform: translateY(22px); }
+  80% { transform: translateY(0); }
+  90% { transform: translateY(10px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sharkWrap,
+  .sharkPeek {
+    animation: none !important;
+  }
+}
