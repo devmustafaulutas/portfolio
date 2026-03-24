@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useId, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { useTheme } from "next-themes";
 import styles from "./theme-toggle.module.css";
 

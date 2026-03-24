@@ -1,4 +1,3 @@
-import React from "react";
 import { CodeBlock } from "@/src/components/content/code-block";
 import { DemoTabs } from "@/src/components/demos/demo-tabs";
 import { LiveCounterDemo } from "@/src/components/demos/live-counter-demo";

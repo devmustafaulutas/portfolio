@@ -5,8 +5,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/src/lib/cn";
 import { Container } from "@/src/components/layout/container";
-import { ThemeToggle } from "../theme/theme-toggle";
-import { LogoMark } from "./logo-mark";
+import { ThemeToggle } from "@/src/components/theme/theme-toggle";
+import { LogoMark } from "@/src/components/site/logo-mark";
 
 import {
   Github,

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { postsIndex } from "@/src/features/posts/posts.index";
 import { PostCard } from "@/src/components/content/post-card";
 

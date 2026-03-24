@@ -4,8 +4,8 @@ import { ThemeProvider } from "@/src/components/theme/theme-provider";
 import { MotionProvider } from "@/src/components/motion/motion-provider";
 import { SiteHeader } from "@/src/components/site/site-header";
 import { SiteFooter } from "@/src/components/site/site-footer";
-import { PageTransitionProvider } from "../components/motion/page-transition";
-import { OceanBackdrop } from "../components/layout/ocean-backdrop";
+import { PageTransitionProvider } from "@/src/components/motion/page-transition";
+import { OceanBackdrop } from "@/src/components/layout/ocean-backdrop";
 
 export const metadata: Metadata = {
   title: { default: "Mustafa Ulutaş — Blog & Portfolio", template: "%s — Mustafa Ulutaş" },
