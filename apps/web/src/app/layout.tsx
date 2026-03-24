@@ -5,7 +5,6 @@ import { MotionProvider } from "@/src/components/motion/motion-provider";
 import { SiteHeader } from "@/src/components/site/site-header";
 import { SiteFooter } from "@/src/components/site/site-footer";
 import { PageTransitionProvider } from "../components/motion/page-transition";
-import { SharkMascot } from "../components/fun/shark-mascot";
 import { OceanBackdrop } from "../components/layout/ocean-backdrop";
 
 export const metadata: Metadata = {
@@ -20,14 +19,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeProvider>
           <PageTransitionProvider>
             <MotionProvider>
-              <OceanBackdrop />
-              <div className="scroll-progress" />
-              <div className="relative z-10">
-                <SiteHeader />
-                <SharkMascot />
-                {children}
-                <SiteFooter />
-              </div>
+                <OceanBackdrop />
+                <div className="scroll-progress" />
+                <div className="relative z-10">
+                  <SiteHeader />
+
+                  {children}
+                  <SiteFooter />
+                </div>
             </MotionProvider>
           </PageTransitionProvider>
         </ThemeProvider>

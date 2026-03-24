@@ -781,23 +781,23 @@
   "projectFileDependencyGroups": {
     "net10.0": [
       "Domain >= 1.0.0",
-      "entityframework >= 6.5.1"
+      "EntityFramework >= 6.5.1"
     ]
   },
   "packageFolders": {
-    "/Users/mustafaulutas/.nuget/packages/": {}
+    "/Users/adeus/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/mustafaulutas/Desktop/code/personal/MustafaUlutas/portfolio-platform/apps/api/Application/Application.csproj",
+      "projectUniqueName": "/Users/adeus/Desktop/code/personal/MustafaUlutas/portfolio-platform/apps/api/Application/Application.csproj",
       "projectName": "Application",
-      "projectPath": "/Users/mustafaulutas/Desktop/code/personal/MustafaUlutas/portfolio-platform/apps/api/Application/Application.csproj",
-      "packagesPath": "/Users/mustafaulutas/.nuget/packages/",
-      "outputPath": "/Users/mustafaulutas/Desktop/code/personal/MustafaUlutas/portfolio-platform/apps/api/Application/obj/",
+      "projectPath": "/Users/adeus/Desktop/code/personal/MustafaUlutas/portfolio-platform/apps/api/Application/Application.csproj",
+      "packagesPath": "/Users/adeus/.nuget/packages/",
+      "outputPath": "/Users/adeus/Desktop/code/personal/MustafaUlutas/portfolio-platform/apps/api/Application/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/mustafaulutas/.nuget/NuGet/NuGet.Config"
+        "/Users/adeus/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net10.0"
@@ -809,8 +809,8 @@
         "net10.0": {
           "targetAlias": "net10.0",
           "projectReferences": {
-            "/Users/mustafaulutas/Desktop/code/personal/MustafaUlutas/portfolio-platform/apps/api/Domain/Domain.csproj": {
-              "projectPath": "/Users/mustafaulutas/Desktop/code/personal/MustafaUlutas/portfolio-platform/apps/api/Domain/Domain.csproj"
+            "/Users/adeus/Desktop/code/personal/MustafaUlutas/portfolio-platform/apps/api/Domain/Domain.csproj": {
+              "projectPath": "/Users/adeus/Desktop/code/personal/MustafaUlutas/portfolio-platform/apps/api/Domain/Domain.csproj"
             }
           }
         }
@@ -825,13 +825,13 @@
         "auditLevel": "low",
         "auditMode": "all"
       },
-      "SdkAnalysisLevel": "10.0.100"
+      "SdkAnalysisLevel": "10.0.200"
     },
     "frameworks": {
       "net10.0": {
         "targetAlias": "net10.0",
         "dependencies": {
-          "entityframework": {
+          "EntityFramework": {
             "target": "Package",
             "version": "[6.5.1, )"
           }
@@ -852,7 +852,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.100/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.200/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.CSharp": "(,4.7.32767]",
           "Microsoft.VisualBasic": "(,10.4.32767]",
