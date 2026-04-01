@@ -1,8 +1,33 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { DocShell } from "@/src/components/layout/doc-shell";
-import { Toc } from "@/src/components/content/toc";
-import { CodeBlock } from "@/src/components/content/code-block";
-import { getSnippet, snippetsIndex } from "@/src/features/snippets/snippets.index";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+import { getSnippet, getSnippetSlugs } from "@/content/snippets";
+import { siteConfig } from "@/config/site";
+import { breadcrumbSchema, jsonLd } from "@/lib/seo";
+import { languageColor } from "@/lib/format";
+import { CodeBlock } from "@/components/content/code-block";
+import { CopyCodeButton } from "@/components/content/copy-button";
+
+export async function generateStaticParams() {
+  return getSnippetSlugs();
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const snippet = await getSnippet(slug);
+  if (!snippet) return {};
+
+  return {
+    title: snippet.title,
+    description: snippet.description,
+    alternates: { canonical: `${siteConfig.url}/snippets/${slug}` },
+  };
+}
 
 export default async function SnippetDetailPage({
   params,
@@ -10,66 +35,101 @@ export default async function SnippetDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const snip = getSnippet(slug);
-  if (!snip) return notFound();
+  const snippet = await getSnippet(slug);
+  if (!snippet) notFound();
+
+  const langColor = languageColor(snippet.language);
 
   return (
-    <main>
-      <DocShell
-        nav={
-          <div className="rounded-2xl border bg-card p-4">
-            <div className="text-xs font-semibold tracking-wide text-foreground/70">
-              Snippets
-            </div>
-            <div className="mt-3 space-y-2 text-sm">
-              {snippetsIndex.map((s) => (
-                <a
-                  key={s.slug}
-                  href={`/snippets/${s.slug}`}
-                  className={[
-                    "block rounded-lg px-2 py-1.5 transition",
-                    s.slug === slug
-                      ? "bg-muted text-foreground"
-                      : "text-foreground/75 hover:bg-muted/60 hover:text-foreground",
-                  ].join(" ")}
-                >
-                  {s.title}
-                </a>
-              ))}
-            </div>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: jsonLd(
+            breadcrumbSchema([
+              { name: "Ana Sayfa", href: "/" },
+              { name: "Blog", href: "/blog#snippets" },
+              { name: snippet.title, href: `/snippets/${slug}` },
+            ])
+          ),
+        }}
+      />
+
+      <div className="container-narrow py-12 md:py-16">
+        <Link
+          href="/blog#snippets"
+          className="mb-8 inline-flex items-center gap-1.5 text-sm text-[hsl(var(--foreground-2))] transition-colors hover:text-[hsl(var(--foreground))]"
+        >
+          <ArrowLeft className="h-3.5 w-3.5" />
+          Blog içindeki snippets
+        </Link>
+
+        <header className="mb-8">
+          <div className="mb-4 flex flex-wrap items-center gap-2">
+            <span
+              className="badge font-mono text-[10px]"
+              style={{ borderColor: `${langColor}50`, color: langColor }}
+            >
+              {snippet.language}
+            </span>
+
+            {snippet.tags.map((tag) => (
+              <span key={tag} className="badge text-[10px]">
+                {tag}
+              </span>
+            ))}
           </div>
-        }
-        toc={<Toc selector="article h2, article h3" />}
-      >
-        <article className="prose prose-slate max-w-none dark:prose-invert prose-headings:font-mono prose-p:leading-8">
-          <header data-section>
-            <p data-reveal className="text-sm text-foreground/60">
-              Snippet / {snip.language}
-            </p>
-            <h1 data-reveal>{snip.title}</h1>
-            <p data-reveal>{snip.description}</p>
-          </header>
 
-          <section data-section className="mt-10">
-            <h2 id="code" data-reveal>Code</h2>
-            <div data-reveal className="mt-4">
-              <CodeBlock
-                lang={snip.language}
-                filename={`${snip.slug}.${snip.language}`}
-                code={snip.code}
-              />
-            </div>
-          </section>
+          <h1 className="text-heading mb-3 text-[clamp(1.9rem,4vw,3rem)] text-[hsl(var(--foreground))]">
+            {snippet.title}
+          </h1>
 
-          <section data-section className="mt-10">
-            <h2 id="notes" data-reveal>Notes</h2>
-            <ul data-reveal>
-              <li>Bu snippet’leri ileride API’den yönetip admin panelde düzenleyeceğiz.</li>
-              <li>Tag’ler: {snip.tags.join(", ")}</li>
-            </ul>
+          <p className="text-body max-w-[56ch]">{snippet.description}</p>
+        </header>
+
+        <section aria-label="Kod">
+          <div className="mb-2 flex items-center justify-between">
+            <div className="text-label">Kod</div>
+            <CopyCodeButton code={snippet.code} />
+          </div>
+
+          <CodeBlock
+            code={snippet.code}
+            language={snippet.language}
+            filename={`${slug}.${langExt(snippet.language)}`}
+          />
+        </section>
+
+        {snippet.usage ? (
+          <section aria-label="Kullanım" className="mt-10">
+            <div className="mb-3 text-label">Kullanım Örneği</div>
+            <CodeBlock code={snippet.usage} language={snippet.language} filename="usage" />
           </section>
-        </article>
-      </DocShell>
-    </main>
+        ) : null}
+
+        {snippet.notes ? (
+          <section aria-label="Notlar" className="mt-10">
+            <div className="mb-3 text-label">Notlar</div>
+            <div className="callout callout-info text-sm leading-relaxed">{snippet.notes}</div>
+          </section>
+        ) : null}
+      </div>
+    </>
   );
+}
+
+function langExt(lang: string): string {
+  const map: Record<string, string> = {
+    TypeScript: "ts",
+    JavaScript: "js",
+    "C#": "cs",
+    Shell: "sh",
+    YAML: "yml",
+    SQL: "sql",
+    Rust: "rs",
+    Go: "go",
+    Python: "py",
+  };
+
+  return map[lang] ?? "txt";
 }

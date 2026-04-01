@@ -1,15 +1,21 @@
-import { cn } from "@/src/lib/cn";
+import { cn } from "@/lib/cn";
+
+type Props = {
+  children: React.ReactNode;
+  className?: string;
+  narrow?: boolean;
+  as?: React.ElementType;
+};
 
 export function Container({
-  className,
   children,
-}: {
-  className?: string;
-  children: React.ReactNode;
-}) {
+  className,
+  narrow = false,
+  as: Tag = "div",
+}: Props) {
   return (
-    <div className={cn("mx-auto w-full max-w-6xl px-4 sm:px-6", className)}>
+    <Tag className={cn(narrow ? "container-narrow" : "container-site", className)}>
       {children}
-    </div>
+    </Tag>
   );
 }

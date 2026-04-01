@@ -1,63 +1,84 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-type TocItem = { id: string; text: string; level: 2 | 3 };
+type TocItem = {
+  id: string;
+  text: string;
+  level: number; // 2 | 3
+};
 
-export function Toc({ selector = "article h2, article h3" }: { selector?: string }) {
-  const [active, setActive] = useState<string>("");
+function buildToc(): TocItem[] {
+  const headings = document.querySelectorAll<HTMLElement>(
+    "article h2[id], article h3[id]"
+  );
+  return Array.from(headings).map((el) => ({
+    id: el.id,
+    text: el.textContent?.replace(/\s*#\s*$/, "") ?? "",
+    level: el.tagName === "H2" ? 2 : 3,
+  }));
+}
 
-  const items = useMemo(() => {
-    if (typeof document === "undefined") return [] as TocItem[];
-    const nodes = Array.from(document.querySelectorAll(selector)) as HTMLElement[];
-    return nodes
-      .map((el) => {
-        const level = (el.tagName.toLowerCase() === "h2" ? 2 : 3) as 2 | 3;
-        const id = el.id || "";
-        const text = (el.textContent || "").trim();
-        return id && text ? { id, text, level } : null;
-      })
-      .filter(Boolean) as TocItem[];
-  }, [selector]);
+export function Toc() {
+  const [items, setItems] = useState<TocItem[]>([]);
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
-    const headings = Array.from(document.querySelectorAll(selector)) as HTMLElement[];
-    if (!headings.length) return;
+    const toc = buildToc();
+    setItems(toc);
+    if (toc.length === 0) return;
 
-    const io = new IntersectionObserver(
+    const headingEls = toc
+      .map(({ id }) => document.getElementById(id))
+      .filter(Boolean) as HTMLElement[];
+
+    observerRef.current?.disconnect();
+
+    observerRef.current = new IntersectionObserver(
       (entries) => {
-        const visible = entries.filter((e) => e.isIntersecting);
-        if (!visible.length) return;
-        const top = visible.sort((a, b) => (b.intersectionRatio ?? 0) - (a.intersectionRatio ?? 0))[0];
-        setActive((top.target as HTMLElement).id);
+        // Find the topmost visible heading
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+
+        if (visible.length > 0) {
+          setActiveId(visible[0].target.id);
+        }
       },
-      { rootMargin: "-20% 0px -70% 0px", threshold: [0.2, 0.35, 0.5] }
+      { rootMargin: "-80px 0px -65% 0px", threshold: 0 }
     );
 
-    headings.forEach((h) => io.observe(h));
-    return () => io.disconnect();
-  }, [selector]);
+    headingEls.forEach((el) => observerRef.current!.observe(el));
 
-  if (!items.length) return null;
+    return () => observerRef.current?.disconnect();
+  }, []);
+
+  if (items.length === 0) return null;
 
   return (
-    <div className="rounded-2xl border bg-card p-4">
-      <div className="text-xs font-semibold tracking-wide text-foreground/70">İçindekiler</div>
-      <div className="mt-3 space-y-2">
-        {items.map((x) => (
-          <a
-            key={x.id}
-            href={`#${x.id}`}
-            className={[
-              "block text-sm leading-6 transition",
-              x.level === 3 ? "pl-3 text-foreground/70" : "text-foreground/85",
-              active === x.id ? "text-primary font-medium" : "hover:text-foreground",
-            ].join(" ")}
-          >
-            {x.text}
-          </a>
-        ))}
-      </div>
-    </div>
+    <nav aria-label="İçindekiler" className="space-y-0.5">
+      <div className="text-label mb-3">İçindekiler</div>
+      {items.map((item) => (
+        <a
+          key={item.id}
+          href={`#${item.id}`}
+          data-active={item.id === activeId ? "true" : undefined}
+          className={`toc-item ${item.level === 3 ? "toc-item--h3" : ""}`}
+          onClick={(e) => {
+            e.preventDefault();
+            const el = document.getElementById(item.id);
+            if (el) {
+              el.scrollIntoView({ behavior: "smooth", block: "start" });
+              // Update hash without triggering jump
+              history.replaceState(null, "", `#${item.id}`);
+              setActiveId(item.id);
+            }
+          }}
+        >
+          {item.text}
+        </a>
+      ))}
+    </nav>
   );
 }

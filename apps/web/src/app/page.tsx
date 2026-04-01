@@ -1,239 +1,194 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
+import { HeroScene } from "@/components/home/hero-scene";
+import { HomeStory } from "@/components/home/home-story";
 import {
-  ArrowUpRight,
-  BookOpen,
-  Code2,
-  Github,
-  Linkedin,
-  Mail,
-} from "lucide-react";
+  getFeaturedPosts,
+  getLatestPosts,
+} from "@/content/posts";
+import { getFeaturedSnippets } from "@/content/snippets";
+import { formatDateShort } from "@/lib/format";
+import { siteConfig } from "@/config/site";
 
-function cx(...s: Array<string | false | null | undefined>) {
-  return s.filter(Boolean).join(" ");
-}
-
-const LINKS = {
-  projects: "/projects",
-  blog: "/blog",
-  snippets: "/snippets",
-  email: "mailto:hello@example.com",
-  github: "https://github.com/",
-  linkedin: "https://linkedin.com/",
+export const metadata: Metadata = {
+  title: `${siteConfig.name} — Creative Full-Stack Engineer`,
+  description: siteConfig.description,
 };
 
-function KineticLine({ children }: { children: string }) {
-  return (
-    <div data-kinetic-line className="kinetic-line">
-      <span className="kinetic-line__inner">{children}</span>
-    </div>
-  );
-}
+export default async function HomePage() {
+  const [featuredPosts, latestPosts, snippets] = await Promise.all([
+    getFeaturedPosts(),
+    getLatestPosts(4),
+    getFeaturedSnippets(),
+  ]);
 
-function NavPill({
-  href,
-  children,
-}: {
-  href: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <Link
-      href={href}
-      data-magnetic
-      className={cx(
-        "inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold",
-        "ocean-pill hover:-translate-y-[1px] active:translate-y-0 transition will-change-transform"
-      )}
-    >
-      {children}
-      <ArrowUpRight className="h-4 w-4 transition duration-300 group-hover:rotate-45" />
-    </Link>
-  );
-}
+  const postsSource = featuredPosts.length > 0 ? featuredPosts : latestPosts;
 
-export default function HomePage() {
+  const uniquePosts = Array.from(
+    new Map(postsSource.map((post) => [post.slug, post])).values()
+  );
+
+  const leadPost = uniquePosts[0] ?? latestPosts[0] ?? null;
+
+  const sidePosts = Array.from(
+    new Map(
+      [...uniquePosts.slice(1), ...latestPosts]
+        .filter((post) => (leadPost ? post.slug !== leadPost.slug : true))
+        .map((post) => [post.slug, post])
+    ).values()
+  ).slice(0, 3);
+
   return (
-    <main className="relative">
-      {/* HERO */}
-      <section data-section data-hero className="">
-        <div className="mx-auto max-w-6xl px-6 pt-28 pb-16 md:pt-32">
-          <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 rounded-full ocean-kicker-pill px-4 py-2 text-xs">
-              <span className="ocean-dot" />
-              OCEAN PORTFOLIO • DAY/NIGHT • LENIS+GSAP
+    <>
+      <HeroScene />
+      <HomeStory />
+
+      <section className="container-site py-20 md:py-24">
+        <div className="mb-10 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+          <div>
+            <div className="section-label mb-4">Seçtiğim birkaç yazı</div>
+            <h2 className="text-heading text-[clamp(2rem,4vw,3.5rem)] text-[hsl(var(--foreground))]">
+              Zihnimde dolaşan şeyler.
+            </h2>
+            <p className="mt-4 max-w-[42ch] text-base leading-8 text-[hsl(var(--foreground-2))]">
+              Daha çok ürün, yazılım mimarisi, performans, arayüz hissi ve
+              geliştirme sırasında fark yaratan küçük kararlar üzerine yazıyorum.
+            </p>
+          </div>
+
+          <Link href="/blog" className="btn btn-secondary">
+            Tüm yazılar
+            <ArrowUpRight className="h-4 w-4" />
+          </Link>
+        </div>
+
+        {leadPost ? (
+          <Link
+            href={`/blog/${leadPost.slug}`}
+            className="group block border-y border-[hsl(var(--border))] py-10 transition-colors"
+          >
+            <div className="flex flex-wrap items-center gap-4">
+              <time dateTime={leadPost.date} className="text-label">
+                {formatDateShort(leadPost.date)}
+              </time>
+              <span className="text-xs text-[hsl(var(--foreground-3))]">
+                {leadPost.readingTime}
+              </span>
             </div>
 
-            <h1
-              data-hero-title
-              className="mt-7 text-[clamp(44px,6vw,84px)] font-semibold tracking-tight leading-[0.98]"
-            >
-              Merhaba, ben Mustafa Ulutaş.
-            </h1>
+            <h3 className="mt-5 max-w-[16ch] text-heading text-[clamp(1.9rem,4vw,3.7rem)] text-[hsl(var(--foreground))] transition-colors group-hover:text-[hsl(var(--accent))]">
+              {leadPost.title}
+            </h3>
 
-            <p
-              data-hero-lead
-              className="mt-5 text-base md:text-lg leading-8 text-foreground/75 max-w-[68ch]"
-            >
-              Üretimde çalışan sistemler kuruyorum: performans, güvenlik ve tasarım aynı sahnede.
-              Bu sayfa “UI” değil — <span className="text-foreground">hissettiren</span> bir dalış.
-              Üstte yüzey aydınlık, aşağı indikçe derinleşiyor.
+            <p className="mt-5 max-w-[52ch] text-base leading-8 text-[hsl(var(--foreground-2))]">
+              {leadPost.excerpt}
             </p>
 
-            <div data-hero-cta className="mt-8 flex flex-wrap gap-3">
-              <Link href={LINKS.projects} data-magnetic className="ocean-cta">
-                Selected Work <ArrowUpRight className="h-4 w-4" />
-              </Link>
-              <Link href={LINKS.blog} data-magnetic className="ocean-cta ghost">
-                Writing <BookOpen className="h-4 w-4" />
-              </Link>
-              <Link href={LINKS.snippets} data-magnetic className="ocean-cta ghost">
-                Snippets <Code2 className="h-4 w-4" />
-              </Link>
-            </div>
-
-            <div className="mt-10 flex flex-wrap gap-2 text-xs text-foreground/70">
-              {["Performance", "Security", "Systems", "UX", "Storytelling"].map((t) => (
-                <span key={t} className="ocean-chip px-3 py-1 rounded-full">
-                  {t}
+            <div className="mt-6 flex flex-wrap gap-2">
+              {leadPost.tags.slice(0, 4).map((tag) => (
+                <span key={tag} className="badge">
+                  {tag}
                 </span>
               ))}
             </div>
+          </Link>
+        ) : null}
 
-            <div className="mt-12 flex flex-wrap gap-2">
-              <NavPill href={LINKS.github}>
-                <Github className="h-4 w-4" /> GitHub
-              </NavPill>
-              <NavPill href={LINKS.linkedin}>
-                <Linkedin className="h-4 w-4" /> LinkedIn
-              </NavPill>
-              <NavPill href={LINKS.email}>
-                <Mail className="h-4 w-4" /> Email
-              </NavPill>
-            </div>
-            <div className="mt-10 ocean-scroll-cue">
-              <div className="ocean-scroll-cue__dot" />
-              <div className="text-sm text-foreground/70">
-                Scroll → yüzey ışığı azalır, “ink” artar, tipografi sahne değiştirir.
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* KINETIC TYPOGRAPHY — PINNED SCENE */}
-      <section data-section data-kinetic className="relative">
-        <div data-kinetic-pin className="mx-auto max-w-6xl px-6 py-24 md:py-28">
-          <div className="max-w-4xl">
-            <div className="text-xs tracking-wide text-foreground/60">
-              CHAPTER 01 • SURFACE → MIDWATER
-            </div>
-
-            <h2
-              data-kinetic-title
-              className="mt-5 text-[clamp(36px,5.2vw,78px)] font-semibold tracking-tight leading-[1.02]"
-            >
-              Daha az UI, daha çok sahne.
-            </h2>
-
-            <p
-              data-kinetic-sub
-              className="mt-5 text-base md:text-lg leading-8 text-foreground/75 max-w-[70ch]"
-            >
-              Bu bölüm pinned: scroll ettikçe cümleler “su gibi” akar. Blur, spacing ve
-              mask reveal ile okyanus hissi. (Vel/scroll değerleri Lenis’ten geliyor.)
-            </p>
-
-            <div className="mt-12 space-y-3">
-              <KineticLine>Ship systems.</KineticLine>
-              <KineticLine>Polish UX.</KineticLine>
-              <KineticLine>Harden security.</KineticLine>
-              <KineticLine>Tell it cinematically.</KineticLine>
-            </div>
-
-            <div className="mt-12 ocean-rule" />
-            <p className="mt-8 text-sm text-foreground/70">
-              İpucu: mouse’u gezdir → su yüzeyi “spotlight” takip eder. Tıklayınca route wipe var.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* SELECTED WORK — LIST (no cards) */}
-      <section data-section className="mx-auto max-w-6xl px-6 py-24 md:py-28">
-        <div className="text-xs tracking-wide text-foreground/60">CHAPTER 02 • WORK</div>
-        <h3 className="mt-4 text-3xl md:text-4xl font-semibold tracking-tight">
-          Seçilmiş işler (liste, kart değil).
-        </h3>
-        <p className="mt-4 text-sm md:text-base leading-7 text-foreground/75 max-w-[70ch]">
-          Hover’da satır “kayarak” tepki verir. Scroll’da reveal var. Minimal içerik + maksimum his.
-        </p>
-
-        <ul className="mt-10 divide-y divide-border/60">
-          {[
-            {
-              title: "Envanty Platform",
-              meta: ".NET 9 • CQRS • Multi-tenant • React",
-              href: LINKS.projects,
-            },
-            {
-              title: "Dashboard Builder",
-              meta: "Grid systems • Layouts • Motion • DX",
-              href: LINKS.projects,
-            },
-            {
-              title: "Engineering Notes",
-              meta: "Scaling • Performance • Security",
-              href: LINKS.blog,
-            },
-            {
-              title: "Reusable Snippets",
-              meta: "UI primitives • Hooks • Patterns",
-              href: LINKS.snippets,
-            },
-          ].map((i) => (
-            <li key={i.title} className="py-6 md:py-7">
+        {sidePosts.length > 0 ? (
+          <div className="mt-8">
+            {sidePosts.map((post) => (
               <Link
-                href={i.href}
-                data-reveal
-                data-hoverline
-                className="work-line group flex flex-col gap-2 md:flex-row md:items-baseline md:justify-between"
+                key={post.slug}
+                href={`/blog/${post.slug}`}
+                className="work-row group"
               >
-                <span className="work-line__title text-2xl md:text-3xl font-semibold tracking-tight">
-                  {i.title}
-                </span>
-                <span className="work-line__meta text-sm text-foreground/70">
-                  {i.meta}
-                </span>
+                <div className="max-w-[38rem]">
+                  <div className="mb-2 flex flex-wrap items-center gap-3">
+                    <time dateTime={post.date} className="text-label">
+                      {formatDateShort(post.date)}
+                    </time>
+                    <span className="text-xs text-[hsl(var(--foreground-3))]">
+                      {post.readingTime}
+                    </span>
+                  </div>
+
+                  <h3 className="work-row__title text-heading text-[1.22rem] text-[hsl(var(--foreground))] transition-colors">
+                    {post.title}
+                  </h3>
+
+                  <p className="mt-3 text-sm leading-7 text-[hsl(var(--foreground-2))]">
+                    {post.excerpt}
+                  </p>
+                </div>
+
+                <div className="flex flex-wrap gap-2 sm:justify-end">
+                  {post.tags.slice(0, 3).map((tag) => (
+                    <span key={tag} className="badge">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
               </Link>
-            </li>
-          ))}
-        </ul>
+            ))}
+          </div>
+        ) : null}
       </section>
 
-      {/* DEEP END — CONTACT */}
-      <section data-section className="mx-auto max-w-6xl px-6 pb-28 pt-10 md:pt-14">
-        <div className="text-xs tracking-wide text-foreground/60">CHAPTER 03 • ABYSS</div>
-        <h3 className="mt-4 text-3xl md:text-5xl font-semibold tracking-tight">
-          Derinlikte konuşalım.
-        </h3>
-        <p className="mt-5 text-sm md:text-base leading-7 text-foreground/75 max-w-[70ch]">
-          Aşağı indikçe ortam koyulaşır — ama tipografi daha netleşir. Bu hissi tüm siteye yayacağız.
-        </p>
+      <section className="border-y border-[hsl(var(--border))] bg-[hsl(var(--surface-subtle)/0.22)]">
+        <div className="container-site py-20 md:py-24">
+          <div className="mb-10 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+            <div>
+              <div className="section-label mb-4">Kısa notlar</div>
+              <h2 className="text-heading text-[clamp(1.9rem,4vw,3.2rem)] text-[hsl(var(--foreground))]">
+                Küçük ama işe yarayan parçalar.
+              </h2>
+              <p className="mt-4 max-w-[40ch] text-base leading-8 text-[hsl(var(--foreground-2))]">
+                Bazen uzun yazmak yerine küçük bir snippet ya da kısa bir teknik
+                not daha çok işe yarıyor.
+              </p>
+            </div>
 
-        <div className="mt-10 flex flex-wrap gap-3">
-          <Link href={LINKS.email} data-magnetic className="ocean-cta">
-            Email <ArrowUpRight className="h-4 w-4" />
-          </Link>
-          <Link href={LINKS.github} data-magnetic className="ocean-cta ghost">
-            GitHub <ArrowUpRight className="h-4 w-4" />
-          </Link>
-          <Link href={LINKS.linkedin} data-magnetic className="ocean-cta ghost">
-            LinkedIn <ArrowUpRight className="h-4 w-4" />
-          </Link>
+            <Link href="/blog#snippets" className="btn btn-ghost">
+              Blog içinde gör
+              <ArrowUpRight className="h-4 w-4" />
+            </Link>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-3">
+            {snippets.slice(0, 3).map((snippet) => (
+              <Link
+                key={snippet.slug}
+                href={`/snippets/${snippet.slug}`}
+                className="group rounded-[22px] border border-[hsl(var(--border))] p-5 transition-all duration-200 hover:-translate-y-[2px] hover:border-[hsl(var(--accent)/0.34)]"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <span className="badge badge-accent">Snippet</span>
+                  <span className="text-xs text-[hsl(var(--foreground-3))]">
+                    {snippet.language}
+                  </span>
+                </div>
+
+                <h3 className="mt-4 text-heading text-[1rem] text-[hsl(var(--foreground))] transition-colors group-hover:text-[hsl(var(--accent))]">
+                  {snippet.title}
+                </h3>
+
+                <p className="mt-3 text-sm leading-7 text-[hsl(var(--foreground-2))]">
+                  {snippet.description}
+                </p>
+
+                <div className="mt-5 flex flex-wrap gap-2">
+                  {snippet.tags.slice(0, 3).map((tag) => (
+                    <span key={tag} className="badge">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
-
-        <div className="mt-16 h-[22svh]" aria-hidden="true" />
       </section>
-    </main>
+    </>
   );
 }

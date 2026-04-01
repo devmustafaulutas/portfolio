@@ -1,58 +1,69 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useMemo, useRef } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import { usePathname, useRouter } from "next/navigation";
 
-type Ctx = { go: (href: string) => void };
-const TransitionCtx = createContext<Ctx | null>(null);
-
-export function PageTransitionProvider({ children }: { children: React.ReactNode }) {
-  const overlayRef = useRef<HTMLDivElement | null>(null);
-  const router = useRouter();
+export function PageTransitionProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const pathname = usePathname();
-  const pending = useRef<string | null>(null);
+  const curtainRef = useRef<HTMLDivElement>(null);
+  const firstRender = useRef(true);
 
   useEffect(() => {
-    // route değişince overlay’i kapat
-    if (!overlayRef.current) return;
-    gsap.to(overlayRef.current, { opacity: 0, duration: 0.35, ease: "power2.out" });
-    pending.current = null;
+    const curtain = curtainRef.current;
+    if (!curtain) return;
+
+    const reduced =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (firstRender.current) {
+      firstRender.current = false;
+      // Entrance fade-in from blank
+      if (!reduced) {
+        gsap.fromTo(
+          curtain,
+          { scaleY: 1, opacity: 1 },
+          { scaleY: 0, opacity: 0, duration: 0.55, ease: "power3.inOut", transformOrigin: "top" }
+        );
+      }
+      return;
+    }
+
+    if (!reduced) {
+      // Route wipe: flash cover → then uncover
+      gsap.fromTo(
+        curtain,
+        { scaleY: 0, opacity: 1, transformOrigin: "bottom" },
+        {
+          scaleY: 1,
+          duration: 0.28,
+          ease: "power3.in",
+          onComplete: () => {
+            gsap.fromTo(
+              curtain,
+              { scaleY: 1, transformOrigin: "top" },
+              { scaleY: 0, duration: 0.38, ease: "power3.out" }
+            );
+          },
+        }
+      );
+    }
   }, [pathname]);
 
-  const value = useMemo<Ctx>(() => ({
-    go: (href) => {
-      if (!overlayRef.current) return router.push(href);
-      if (href === pathname) return;
-
-      pending.current = href;
-
-      gsap.to(overlayRef.current, {
-        opacity: 1,
-        duration: 0.22,
-        ease: "power2.inOut",
-        onComplete: () => router.push(href),
-      });
-    },
-  }), [router, pathname]);
-
   return (
-    <TransitionCtx.Provider value={value}>
+    <>
       <div
-        ref={overlayRef}
-        className="pointer-events-none fixed inset-0 z-[60] opacity-0"
-        style={{
-          background:
-            "radial-gradient(1200px 600px at 50% 20%, rgba(120,119,198,0.20), rgba(0,0,0,0.65))",
-        }}
+        ref={curtainRef}
+        className="route-wipe"
+        aria-hidden="true"
+        style={{ opacity: 1, transform: "scaleY(1)" }}
       />
       {children}
-    </TransitionCtx.Provider>
+    </>
   );
-}
-
-export function usePageTransition() {
-  const ctx = useContext(TransitionCtx);
-  if (!ctx) throw new Error("usePageTransition must be used within PageTransitionProvider");
-  return ctx;
 }
