@@ -45,7 +45,7 @@ export default async function HomePage() {
       <HomeStory />
 
       <section className="container-site py-20 md:py-24">
-        <div className="mb-10 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+        {/* <div className="mb-10 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
           <div>
             <div className="section-label mb-4">Seçtiğim birkaç yazı</div>
             <h2 className="text-heading text-[clamp(2rem,4vw,3.5rem)] text-[hsl(var(--foreground))]">
@@ -61,7 +61,7 @@ export default async function HomePage() {
             Tüm yazılar
             <ArrowUpRight className="h-4 w-4" />
           </Link>
-        </div>
+        </div> */}
 
         {leadPost ? (
           <Link
@@ -134,7 +134,7 @@ export default async function HomePage() {
           </div>
         ) : null}
       </section>
-
+{/* 
       <section className="border-y border-[hsl(var(--border))] bg-[hsl(var(--surface-subtle)/0.22)]">
         <div className="container-site py-20 md:py-24">
           <div className="mb-10 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
@@ -188,7 +188,7 @@ export default async function HomePage() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
     </>
   );
 }
