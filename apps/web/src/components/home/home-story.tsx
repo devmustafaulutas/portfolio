@@ -69,12 +69,14 @@ export function HomeStory() {
     },
     { scope: rootRef, dependencies: [reducedMotion], revertOnUpdate: true }
   );
-
   useEffect(() => {
     if (!rootRef.current || reducedMotion) return;
 
     const root = rootRef.current;
     const content = contentRef.current;
+
+    if (!content) return; // 🔥 KRİTİK SATIR
+
     const lines = Array.from(root.querySelectorAll<HTMLElement>("[data-line]"));
     const progressEl = root.querySelector<HTMLElement>("[data-story-progress]");
 
