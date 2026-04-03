@@ -69,6 +69,7 @@ export function HomeStory() {
     },
     { scope: rootRef, dependencies: [reducedMotion], revertOnUpdate: true }
   );
+  
   useEffect(() => {
     if (!rootRef.current || reducedMotion) return;
 

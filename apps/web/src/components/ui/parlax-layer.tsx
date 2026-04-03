@@ -31,7 +31,9 @@ export function ParallaxLayer({ children, speed = -0.25, className = "" }: Props
 
     tl.to(el, { y: `${speed * 100}px`, ease: "none" });
 
-    return () => tl.kill();
+    return () => {
+      tl.kill();
+    };
   }, [speed]);
 
   return (
