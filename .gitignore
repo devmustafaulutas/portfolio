@@ -66,3 +66,6 @@ $RECYCLE.BIN/
 *.log
 tree.sh
 ./tree.sh
+
+# Lighthouse (local reports)
+apps/web/lighthouse-report.html

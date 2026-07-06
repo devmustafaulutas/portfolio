@@ -1,0 +1,129 @@
+# Cursor Project Config - Portfolio Platform
+
+## Project Intent
+- Build a production-ready personal portfolio + blog that can later be reused as a high-quality template.
+- Prioritize `apps/web` for active development.
+- Treat `apps/admin` and `apps/api` as secondary unless explicitly requested.
+- Aim for senior-level engineering decisions: maintainable, scalable, testable, measurable.
+
+## Workspace Priorities
+1. Primary: `apps/web` (Next.js App Router, design system, motion, SEO, content experience)
+2. Secondary: `apps/admin` (internal tooling/admin panels)
+3. Secondary: `apps/api` (.NET backend, domain/app/infrastructure layers)
+
+## Global Engineering Standards
+- Always prefer clarity over cleverness.
+- Keep modules small and composable.
+- Avoid hidden side effects; make data flow explicit.
+- Do not introduce breaking changes without migration notes.
+- Keep TypeScript strictness high; avoid `any` unless unavoidable and documented.
+- Ensure all user-visible copy supports Turkish-first voice while remaining globally readable.
+
+## Web App Rules (`apps/web`)
+
+### SEO-First Development (non-negotiable)
+- Every new page must define complete metadata:
+  - `title`, `description`, canonical URL, Open Graph, Twitter metadata
+  - language and locale consistency (`tr`, `tr_TR` where relevant)
+- Add or update structured data (JSON-LD) whenever content type changes:
+  - `Person`, `WebSite`, `BlogPosting`, `BreadcrumbList`, `SoftwareApplication`, `FAQPage` when applicable
+- Keep internal linking strategy intentional:
+  - contextual links between blog, projects, about, and contact
+  - descriptive anchor text (no generic "click here")
+- Maintain crawlability:
+  - update `robots.ts`, `sitemap`/RSS routes, canonical handling, no duplicate path variants
+- Use semantic HTML hierarchy:
+  - one `h1` per page, meaningful heading levels, proper `article`, `section`, `nav`, `main`, `footer`
+- Enforce media SEO:
+  - descriptive `alt` text
+  - optimized file names and dimensions
+  - OG assets per major content type when possible
+- Add short SEO reasoning in PR/commit notes for meaningful SEO-affecting changes.
+
+### Performance and Core Web Vitals
+- Protect LCP, CLS, and INP on every major change.
+- Minimize client components; prefer server components by default.
+- Use animation libraries without harming TTI/INP:
+  - lazy-load heavy motion when possible
+  - avoid animation work on first paint critical path
+- Prevent layout shift:
+  - reserve space for media and dynamic elements
+- Keep CSS and JS payloads lean:
+  - remove dead code and unused motion timelines
+  - split components by route/feature where practical
+
+### Modern Design and Motion System
+- Design language target: modern, premium, creative, calm, and intentional.
+- Prefer subtle, meaningful motion over decorative noise.
+- Motion must enhance comprehension, hierarchy, and storytelling.
+- For GSAP/Lenis usage:
+  - initialize only in client boundaries
+  - clean up timelines/listeners on unmount
+  - gate motion intensity with `prefers-reduced-motion`
+  - avoid scroll-jacking and accessibility regressions
+- Keep transitions consistent across pages:
+  - shared timing/easing tokens
+  - unified transition philosophy in reusable motion utilities
+- Visual output must remain polished on mobile and desktop breakpoints.
+
+### Accessibility Standards
+- Keyboard navigation must be complete and reliable.
+- Focus states must always be visible.
+- Color contrast should satisfy WCAG AA baseline.
+- Respect reduced motion preferences globally.
+- Interactive elements must have accessible labels and proper ARIA only when needed.
+
+### Content & Blog Quality
+- Blog and project content should be authoritative, practical, and SEO-friendly.
+- Use strong information architecture:
+  - clear slugs, readable summaries, tag consistency
+- Keep reading experience premium:
+  - clean typography rhythm
+  - code snippets readable and copy-friendly
+  - table of contents where valuable
+- Encourage topical clusters:
+  - connect related posts/projects to build semantic authority.
+
+## Admin and API Expectations
+- `apps/admin`: keep code functional, minimal, and maintainable; avoid over-design.
+- `apps/api`: enforce clean architecture boundaries:
+  - Domain remains framework-agnostic
+  - Application layer handles use-cases
+  - Infrastructure handles persistence/external concerns
+- When backend features affect SEO/content rendering, define contract updates explicitly.
+
+## Definition of Done (for meaningful changes)
+- Feature works in local dev for target app.
+- Lint/build pass for touched project(s).
+- No obvious hydration mismatch risks.
+- SEO metadata/structured data reviewed when page/content changed.
+- Accessibility basics checked (keyboard/focus/reduced-motion).
+- Performance impact considered and called out if non-trivial.
+- Code is production-ready and template-reusable.
+
+## Agent Working Behavior
+- Start by understanding whether request targets web, admin, or api.
+- Unless requested otherwise, default implementation scope to `apps/web`.
+- For any new page/section in web:
+  1) implement UI/content
+  2) implement SEO metadata + schema
+  3) validate accessibility/performance basics
+- Suggest improvements proactively when they increase:
+  - SEO potential
+  - visual quality
+  - maintainability
+  - reusability as template
+
+## Preferred Stack Choices (Web)
+- Next.js App Router + TypeScript
+- Tailwind CSS
+- GSAP (`gsap`, `@gsap/react`) for high-control motion
+- Lenis for smooth scrolling when beneficial and accessible
+- Keep third-party additions selective; justify new dependencies by ROI.
+
+## Prohibited Patterns
+- Shipping pages without metadata/canonical support
+- Unbounded animations that reduce usability or battery life
+- Ignoring reduced motion preferences
+- Large refactors without clear reasoning
+- Inline hacks that block future template reuse

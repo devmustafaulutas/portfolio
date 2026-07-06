@@ -1,96 +1,91 @@
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
-import { Manrope, JetBrains_Mono } from "next/font/google";
-import { ThemeProvider } from "@/components/theme/theme-provider";
-import { MotionProvider } from "@/components/motion/motion-provider";
-import { SmoothCursor } from "@/components/ui/smooth-cursor";
-import { SiteHeader } from "@/components/site/site-header";
-import { SiteFooter } from "@/components/site/site-footer";
-import { SkipLink } from "@/components/site/skip-link";
-import { OceanBackdrop } from "@/components/layout/ocean-backdrop";
-import { PageTransitionProvider } from "@/components/motion/page-transition";
+import { Bebas_Neue, Inter, JetBrains_Mono } from "next/font/google";
 import { siteConfig } from "@/config/site";
-import { personSchema, websiteSchema, jsonLd } from "@/lib/seo";
 
-const sans = Manrope({
-  subsets: ["latin"],
-  variable: "--font-sans",
+const display = Bebas_Neue({
+  subsets: ["latin", "latin-ext"],
+  weight: "400",
+  variable: "--font-bebas",
   display: "swap",
-  weight: ["400", "500", "600", "700", "800"],
+});
+
+const sans = Inter({
+  subsets: ["latin", "latin-ext"],
+  weight: ["400", "500", "600"],
+  variable: "--font-inter",
+  display: "swap",
 });
 
 const mono = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
+  subsets: ["latin", "latin-ext"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-jbmono",
   display: "swap",
-  weight: ["400", "500", "600"],
 });
+
+const pageTitle = `${siteConfig.name} — ${siteConfig.role}`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
-  title: {
-    default: `${siteConfig.name} — ${siteConfig.tagline}`,
-    template: `%s — ${siteConfig.name}`,
-  },
+  title: pageTitle,
   description: siteConfig.description,
   keywords: [...siteConfig.keywords],
-  authors: [{ name: siteConfig.author.name, url: siteConfig.url }],
-  creator: siteConfig.author.name,
-  publisher: siteConfig.author.name,
+  authors: [{ name: siteConfig.name, url: siteConfig.url }],
+  creator: siteConfig.name,
+  publisher: siteConfig.name,
   robots: {
     index: true,
     follow: true,
     googleBot: {
       index: true,
       follow: true,
-      "max-video-preview": -1,
       "max-image-preview": "large",
       "max-snippet": -1,
     },
   },
   openGraph: {
     type: "website",
-    locale: "tr_TR",
+    locale: siteConfig.locale,
     url: siteConfig.url,
     siteName: siteConfig.name,
-    title: `${siteConfig.name} — ${siteConfig.tagline}`,
+    title: pageTitle,
     description: siteConfig.description,
-    images: [
-      {
-        url: siteConfig.ogImage,
-        width: 1200,
-        height: 630,
-        alt: `${siteConfig.name} — ${siteConfig.tagline}`,
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: `${siteConfig.name} — ${siteConfig.tagline}`,
+    title: pageTitle,
     description: siteConfig.description,
-    images: [siteConfig.ogImage],
-    creator: "@mustafaulutas",
   },
   alternates: {
     canonical: siteConfig.url,
-    types: {
-      "application/rss+xml": `${siteConfig.url}/rss`,
-    },
-  },
-  icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon-16x16.png",
-    apple: "/apple-touch-icon.png",
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#eef8fb" },
-    { media: "(prefers-color-scheme: dark)", color: "#07131a" },
-  ],
+  themeColor: "#030303",
   width: "device-width",
   initialScale: 1,
+};
+
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: siteConfig.name,
+  jobTitle: siteConfig.role,
+  email: `mailto:${siteConfig.email}`,
+  url: siteConfig.url,
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Kocaeli",
+    addressCountry: "TR",
+  },
+  sameAs: [siteConfig.social.github, siteConfig.social.linkedin],
+  knowsAbout: [...siteConfig.keywords],
+  worksFor: {
+    "@type": "Organization",
+    name: "Mecode Bilişim",
+  },
 };
 
 export default function RootLayout({
@@ -99,35 +94,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="tr" suppressHydrationWarning className={`${sans.variable} ${mono.variable}`}>
-      <head>
+    <html
+      lang="tr"
+      className={`${display.variable} ${sans.variable} ${mono.variable}`}
+    >
+      <body>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: jsonLd(personSchema()) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
         />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: jsonLd(websiteSchema()) }}
-        />
-      </head>
-      <body className="min-h-screen bg-transparent">
-        <SkipLink />
-        <ThemeProvider>
-          <MotionProvider>
-            <PageTransitionProvider>
-              <OceanBackdrop />
-              <SmoothCursor />
-              <div className="reading-progress" aria-hidden="true" />
-              <div className="relative z-10 flex min-h-screen flex-col">
-                <SiteHeader />
-                <main id="main-content" className="flex-1">
-                  {children}
-                </main>
-                <SiteFooter />
-              </div>
-            </PageTransitionProvider>
-          </MotionProvider>
-        </ThemeProvider>
+        {children}
       </body>
     </html>
   );

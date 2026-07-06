@@ -1,36 +1,18 @@
 import Link from "next/link";
-import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "404 — Sayfa Bulunamadı",
-};
 
 export default function NotFound() {
   return (
-    <div className="container-site flex min-h-[60vh] flex-col items-center justify-center py-24 text-center">
-      <div
-        aria-hidden="true"
-        className="mb-6 text-[6rem] font-black leading-none tracking-tight
-                   text-gradient select-none"
-      >
-        404
-      </div>
-
-      <h1 className="text-heading text-2xl text-[hsl(var(--foreground))] mb-3">
-        Sayfa bulunamadı
+    <main className="relative z-10 flex min-h-svh flex-col items-center justify-center gap-8 px-5 text-center">
+      <p className="voice-mono-bright">SİNYAL KAYBI // SIGNAL LOST</p>
+      <h1 className="voice-display text-ink text-[clamp(6rem,28vw,18rem)] leading-none">
+        4<span className="glow-pulse">0</span>4
       </h1>
-      <p className="text-body text-sm mb-8 max-w-[36ch]">
-        Aradığınız sayfa taşınmış, silinmiş ya da hiç var olmamış olabilir.
+      <p className="voice-mono max-w-md leading-relaxed normal-case tracking-[0.08em]">
+        Bu derinlikte aradığın rota yok. Akıntıyı takip et ve yüzeye dön.
       </p>
-
-      <div className="flex gap-3">
-        <Link href="/" className="btn btn-primary btn-sm">
-          Ana sayfaya dön
-        </Link>
-        <Link href="/blog" className="btn btn-secondary btn-sm">
-          Yazılara bak
-        </Link>
-      </div>
-    </div>
+      <Link href="/" className="finale-link border border-line rounded-full px-6 py-3">
+        ← YOLCULUĞA DÖN
+      </Link>
+    </main>
   );
 }
