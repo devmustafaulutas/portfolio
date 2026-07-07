@@ -2,201 +2,219 @@
 
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
-import { ensureGsap, gsap, SplitText } from "@/lib/gsap";
+import { ensureGsap, gsap } from "@/lib/gsap";
+import { scrollBus } from "@/lib/scroll-bus";
+import { introBus } from "@/lib/intro-bus";
+import { DECRYPT_CHARS } from "@/lib/kinetic";
+import { Magnetic } from "@/components/ui/Magnetic";
+import { ZAxisTunnelLayout } from "@/components/layout/ZAxisTunnelLayout";
 import { useSmoothScroll } from "@/components/layout/SmoothScrollLayout";
 
-type HeroSectionProps = {
+type HeroContent = {
   name: string;
   role: string;
-  location: string;
+  meta: readonly string[];
+  scrollCue: string;
 };
 
-export function HeroSection({ name, role, location }: HeroSectionProps) {
-  const sectionRef = useRef<HTMLElement>(null);
+type HeroManifesto = {
+  kicker: string;
+  lines: readonly string[];
+};
+
+type HeroSectionProps = {
+  hero: HeroContent;
+  manifesto: HeroManifesto;
+};
+
+/**
+ * Act I, tunnel edition. After the curtains split, the name decrypts
+ * from cipher characters into "MUSTAFA ULUTAŞ" and the letters keep
+ * breathing with the pointer. Scrolling doesn't scroll — it flies:
+ * the ZAxisTunnelLayout dollies the name 18× past the lens while the
+ * manifesto arrives from the far end of the Z axis.
+ */
+export function HeroSection({ hero, manifesto }: HeroSectionProps) {
   const contentRef = useRef<HTMLDivElement>(null);
-  const nameRef = useRef<HTMLHeadingElement>(null);
-  const titleLiveRef = useRef<HTMLSpanElement>(null);
-  const cueLineRef = useRef<HTMLSpanElement>(null);
+  const firstLineRef = useRef<HTMLSpanElement>(null);
+  const lastLineRef = useRef<HTMLSpanElement>(null);
+  const cueBarRef = useRef<HTMLSpanElement>(null);
   const { scrollTo } = useSmoothScroll();
 
-  const [firstName, ...rest] = name.toLocaleUpperCase("tr-TR").split(" ");
+  const [firstName, ...rest] = hero.name.split(" ");
   const lastName = rest.join(" ");
 
   useGSAP(
     () => {
       ensureGsap();
-      const section = sectionRef.current;
-      const nameEl = nameRef.current;
-      const titleLive = titleLiveRef.current;
-      if (!section || !nameEl || !titleLive) return;
+      const firstLine = firstLineRef.current;
+      const lastLine = lastLineRef.current;
+      if (!firstLine || !lastLine) return;
 
       const mm = gsap.matchMedia();
 
       mm.add("(prefers-reduced-motion: no-preference)", () => {
-        // 1 — the name crashes in, letter by letter, from the deep
-        SplitText.create(nameEl, {
-          type: "chars",
-          mask: "chars",
-          charsClass: "char",
-          autoSplit: true,
-          onSplit: (self) =>
-            gsap.from(self.chars, {
-              yPercent: 118,
-              rotateX: -45,
-              opacity: 0,
-              transformOrigin: "50% 100%",
-              duration: 1.25,
-              ease: "deepOut",
-              stagger: { each: 0.045, from: "start" },
-              delay: 0.35,
-            }),
+        // Hold everything dark until the curtains grant access
+        gsap.set([firstLine, lastLine], { autoAlpha: 0, y: 42 });
+        gsap.set("[data-hero-meta]", { autoAlpha: 0, y: 16 });
+
+        const playEntrance = () => {
+          const entrance = gsap.timeline();
+          entrance
+            .to(firstLine, { autoAlpha: 1, y: 0, duration: 0.6 }, 0)
+            .to(
+              firstLine,
+              {
+                duration: 1.15,
+                ease: "none",
+                scrambleText: {
+                  text: firstName,
+                  chars: DECRYPT_CHARS,
+                  speed: 0.4,
+                },
+              },
+              0.05,
+            )
+            .to(lastLine, { autoAlpha: 1, y: 0, duration: 0.6 }, 0.28)
+            .to(
+              lastLine,
+              {
+                duration: 1.15,
+                ease: "none",
+                scrambleText: {
+                  text: lastName,
+                  chars: DECRYPT_CHARS,
+                  speed: 0.4,
+                },
+              },
+              0.33,
+            )
+            .to(
+              "[data-hero-meta]",
+              { autoAlpha: 1, y: 0, duration: 0.7, stagger: 0.09 },
+              1.0,
+            );
+        };
+
+        const unsubscribe = introBus.onFinish(playEntrance);
+
+        // Pointer field — letters drift apart, lines shear opposite ways
+        const spacingFirst = gsap.quickTo(firstLine, "letterSpacing", {
+          duration: 0.6,
+          ease: "power2",
+        });
+        const spacingLast = gsap.quickTo(lastLine, "letterSpacing", {
+          duration: 0.6,
+          ease: "power2",
+        });
+        const shiftFirst = gsap.quickTo(firstLine, "x", {
+          duration: 0.8,
+          ease: "power2",
+        });
+        const shiftLast = gsap.quickTo(lastLine, "x", {
+          duration: 0.8,
+          ease: "power2",
         });
 
-        // 2 — the role types itself out, then glitches like a bad feed
-        const typing = gsap.timeline({ delay: 1.15 });
-        typing
-          .set(titleLive, { text: "" })
-          .to(titleLive, {
-            duration: 1.7,
-            ease: "none",
-            text: { value: role },
-          });
+        const onPointerTick = () => {
+          const spread = scrollBus.pointerX * 14;
+          spacingFirst(spread);
+          spacingLast(spread * 0.7);
+          shiftFirst(scrollBus.pointerX * -18);
+          shiftLast(scrollBus.pointerX * 18);
+        };
+        gsap.ticker.add(onPointerTick);
 
-        const glitch = gsap.timeline({
-          repeat: -1,
-          repeatDelay: 3.2,
-          delay: 3.1,
-        });
-        glitch
-          .to(titleLive, {
-            x: -2,
-            textShadow:
-              "2px 0 rgba(255,74,38,0.85), -2px 0 rgba(56,225,255,0.85)",
-            duration: 0.055,
-            ease: "none",
-          })
-          .to(titleLive, {
-            x: 2,
-            textShadow:
-              "-2px 0 rgba(255,74,38,0.85), 2px 0 rgba(56,225,255,0.85)",
-            duration: 0.055,
-            ease: "none",
-          })
-          .to(titleLive, {
-            x: 0,
-            textShadow: "0 0 14px rgba(56,225,255,0.45)",
-            duration: 0.09,
-            ease: "none",
-          });
-
-        // 3 — supporting chrome fades up after the name lands
-        gsap.from("[data-hero-meta]", {
-          opacity: 0,
-          y: 18,
-          duration: 0.9,
-          stagger: 0.12,
-          delay: 1.5,
-        });
-
-        // 4 — the scroll cue breathes until the user commits
-        if (cueLineRef.current) {
+        // The cue breathes until the flight begins
+        if (cueBarRef.current) {
           gsap.fromTo(
-            cueLineRef.current,
+            cueBarRef.current,
             { scaleY: 0, transformOrigin: "top center" },
             {
               scaleY: 1,
-              duration: 1.4,
-              ease: "deepInOut",
+              duration: 1.3,
+              ease: "monoInOut",
               repeat: -1,
               yoyo: true,
             },
           );
         }
 
-        // 5 — the whole stage sinks away as the journey begins
-        if (contentRef.current) {
-          gsap.to(contentRef.current, {
-            yPercent: -24,
-            opacity: 0.08,
-            scale: 0.96,
-            ease: "none",
-            scrollTrigger: {
-              trigger: section,
-              start: "top top",
-              end: "bottom 20%",
-              scrub: true,
-            },
-          });
-        }
+        return () => {
+          unsubscribe();
+          gsap.ticker.remove(onPointerTick);
+        };
       });
     },
-    { scope: sectionRef },
+    { scope: contentRef },
+  );
+
+  const frontLayer = (
+    <div
+      ref={contentRef}
+      className="flex min-h-svh flex-col justify-between px-5 pb-10 pt-20 sm:px-10"
+    >
+      <div
+        data-hero-meta
+        className="type-mono flex flex-wrap items-center gap-x-6 gap-y-2"
+      >
+        {hero.meta.map((item) => (
+          <span key={item}>{item}</span>
+        ))}
+      </div>
+
+      <div className="flex flex-1 flex-col items-start justify-center">
+        <h1 className="type-display hero-name">
+          <span ref={firstLineRef} className="block">
+            {firstName}
+          </span>
+          <span ref={lastLineRef} className="block text-outline-w">
+            {lastName}
+          </span>
+        </h1>
+        {/* lang="en": English role title must not pick up Turkish
+            dotted-İ rules during CSS uppercasing. */}
+        <p data-hero-meta lang="en" className="type-mono-bright mt-8">
+          {hero.role}
+        </p>
+      </div>
+
+      <div data-hero-meta className="flex items-end justify-between gap-6">
+        <Magnetic strength={0.3}>
+          <button
+            type="button"
+            onClick={() => scrollTo("#manifesto")}
+            className="group flex items-center gap-4 border-0 bg-transparent p-0 text-left"
+            aria-label="Tünelden manifestoya geç"
+          >
+            <span ref={cueBarRef} className="scroll-cue-bar" />
+            <span className="type-mono transition-colors duration-300 group-hover:text-fg">
+              {hero.scrollCue}
+            </span>
+          </button>
+        </Magnetic>
+        <span className="type-mono hidden sm:block">01 / 05</span>
+      </div>
+    </div>
+  );
+
+  const backLayer = (
+    <div className="flex min-h-svh flex-col items-center justify-center px-5 text-center">
+      <p className="type-mono mb-8">{manifesto.kicker}</p>
+      {manifesto.lines.map((line) => (
+        <span key={line} className="hero-manifesto-line block py-1">
+          {line}
+        </span>
+      ))}
+    </div>
   );
 
   return (
-    <section
-      ref={sectionRef}
+    <ZAxisTunnelLayout
       id="hero"
-      className="relative flex min-h-svh flex-col justify-between overflow-hidden px-5 pb-10 pt-24 sm:px-10"
-    >
-      <div ref={contentRef} className="flex flex-1 flex-col justify-center">
-        <div
-          data-hero-meta
-          className="voice-mono mb-8 flex flex-wrap items-center gap-x-6 gap-y-2 sm:mb-12"
-        >
-          <span>{location.toLocaleUpperCase("tr-TR")}</span>
-          <span className="text-ember">▚</span>
-          <span>40.68° N — 30.05° E</span>
-          <span className="text-ember">▚</span>
-          <span>EST. 05.2025 — ITERATING</span>
-        </div>
-
-        <h1 ref={nameRef} className="voice-display hero-name text-ink">
-          {firstName}
-          <br />
-          <span className="glow-pulse">{lastName}</span>
-        </h1>
-
-        {/* lang="en": the role is English — keeps CSS uppercasing from
-            applying Turkish dotted-İ rules (ARCHİTECT → ARCHITECT). */}
-        <p
-          lang="en"
-          className="hero-title-slot voice-mono-bright mt-8 text-[0.78rem] sm:mt-10 sm:text-[0.95rem]"
-          aria-label={role}
-        >
-          <span className="hero-title-sizer" aria-hidden="true">
-            {role}
-          </span>
-          <span
-            ref={titleLiveRef}
-            className="hero-title-live"
-            aria-hidden="true"
-          />
-        </p>
-
-        <p data-hero-meta className="voice-mono mt-4 max-w-xl leading-relaxed">
-          .NET // CLEAN ARCHITECTURE // CQRS // MULTI-TENANT SAAS //
-          RABBITMQ // REACT + TYPESCRIPT
-        </p>
-      </div>
-
-      <div
-        data-hero-meta
-        className="flex items-end justify-between gap-6"
-      >
-        <button
-          type="button"
-          onClick={() => scrollTo("#journey")}
-          className="group flex cursor-pointer items-center gap-4 border-0 bg-transparent p-0 text-left"
-          aria-label="Yolculuğa başla"
-        >
-          <span ref={cueLineRef} className="scroll-cue-line" />
-          <span className="voice-mono transition-colors duration-300 group-hover:text-pulse">
-            KAYDIR — YOLCULUK BAŞLASIN
-          </span>
-        </button>
-        <span className="voice-mono hidden sm:block">SCENE 01 / 04</span>
-      </div>
-    </section>
+      front={frontLayer}
+      back={backLayer}
+      length={260}
+    />
   );
 }

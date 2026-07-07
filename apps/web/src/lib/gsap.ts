@@ -2,8 +2,9 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { CustomEase } from "gsap/CustomEase";
 import { TextPlugin } from "gsap/TextPlugin";
-import { MotionPathPlugin } from "gsap/MotionPathPlugin";
+import { Flip } from "gsap/Flip";
 import { SplitText } from "gsap/SplitText";
+import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
 
 let registered = false;
 
@@ -21,19 +22,30 @@ export function ensureGsap(): typeof gsap {
     ScrollTrigger,
     CustomEase,
     TextPlugin,
-    MotionPathPlugin,
+    Flip,
     SplitText,
+    ScrambleTextPlugin,
   );
 
-  CustomEase.create("deepOut", "0.16, 1, 0.3, 1");
-  CustomEase.create("deepInOut", "0.83, 0, 0.17, 1");
-  CustomEase.create("surge", "0.7, 0, 0.2, 1");
+  CustomEase.create("monoOut", "0.16, 1, 0.3, 1");
+  CustomEase.create("monoInOut", "0.83, 0, 0.17, 1");
+  CustomEase.create("snap", "0.7, 0, 0.2, 1");
+  // The curtain split: slow grip, violent release, soft landing.
+  CustomEase.create("curtain", "0.87, 0, 0.13, 1");
 
-  gsap.defaults({ ease: "deepOut", duration: 1 });
+  gsap.defaults({ ease: "monoOut", duration: 1 });
   ScrollTrigger.config({ ignoreMobileResize: true });
 
   registered = true;
   return gsap;
 }
 
-export { gsap, ScrollTrigger, CustomEase, TextPlugin, MotionPathPlugin, SplitText };
+export {
+  gsap,
+  ScrollTrigger,
+  CustomEase,
+  TextPlugin,
+  Flip,
+  SplitText,
+  ScrambleTextPlugin,
+};

@@ -1,23 +1,21 @@
 @import "tailwindcss";
 
 /* ============================================================
-   THE DEEP TECH & EVOLUTION — design tokens
+   MONOCHROME SUPREMACY — design tokens
+   Pure black, pure white, technical greys. Nothing else.
    ============================================================ */
 
 @theme inline {
-  --font-display: var(--font-bebas), "Arial Narrow", Impact, sans-serif;
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-grotesk: var(--font-archivo), "Helvetica Neue", Arial, sans-serif;
   --font-mono: var(--font-jbmono), ui-monospace, "Cascadia Code", monospace;
 
-  --color-abyss: #030303;
-  --color-void: #0a0a0a;
-  --color-panel: #0b0f13;
-  --color-ink: #e6edf0;
-  --color-dim: #97a4ab;
-  --color-ghost: #58646b;
-  --color-pulse: #38e1ff;
-  --color-ember: #ff4a26;
-  --color-line: rgba(230, 237, 240, 0.08);
+  --color-bg: #000000;
+  --color-fg: #ffffff;
+  --color-mute: #9b9b9b;
+  --color-faint: #4c4c4c;
+  --color-panel: #0a0a0a;
+  --color-line: rgba(255, 255, 255, 0.14);
+  --color-line-soft: rgba(255, 255, 255, 0.07);
 }
 
 /* ============================================================
@@ -49,15 +47,9 @@ html.lenis body {
 }
 
 body {
-  background-color: var(--color-abyss);
-  background-image: radial-gradient(
-      ellipse 90% 55% at 50% -10%,
-      rgba(56, 225, 255, 0.05),
-      transparent 60%
-    ),
-    linear-gradient(180deg, var(--color-abyss), var(--color-void) 55%, var(--color-abyss));
-  color: var(--color-ink);
-  font-family: var(--font-sans);
+  background-color: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-grotesk);
   font-size: 16px;
   line-height: 1.6;
   overflow-x: hidden;
@@ -66,94 +58,93 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* Difference-blend custom cursor owns the pointer on fine devices */
+@media (pointer: fine) {
+  body {
+    cursor: none;
+  }
+  body a,
+  body button {
+    cursor: none;
+  }
+}
+
 ::selection {
-  background: rgba(56, 225, 255, 0.25);
-  color: #ffffff;
+  background: #ffffff;
+  color: #000000;
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-pulse);
+  outline: 2px solid var(--color-fg);
   outline-offset: 3px;
-  border-radius: 4px;
 }
 
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 4px;
+  height: 4px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-abyss);
+  background: var(--color-bg);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(56, 225, 255, 0.22);
+  background: rgba(255, 255, 255, 0.28);
   border-radius: 99px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(56, 225, 255, 0.45);
+  background: rgba(255, 255, 255, 0.55);
 }
 
-/* Film-grain overlay — sits above everything, never intercepts input */
+/* Film grain — always on, barely there. Cinema, not noise. */
 body::after {
   content: "";
   position: fixed;
   inset: 0;
   z-index: 90;
   pointer-events: none;
-  opacity: 0.05;
+  opacity: 0.06;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 200px 200px;
+  background-size: 180px 180px;
 }
 
 /* ============================================================
    Typography voices
    ============================================================ */
 
-/* Bebas Neue draws every glyph as caps and its lowercase "i" keeps the
-   dot — exactly what Turkish "İ" needs. No text-transform here: CSS
-   uppercasing would map i→İ (U+0130), a glyph the font renders dotless. */
-.voice-display {
-  font-family: var(--font-display);
-  font-weight: 400;
-  line-height: 0.86;
-  letter-spacing: 0.015em;
+/* Archivo carries proper Turkish İ/ı glyphs, so locale-aware CSS
+   uppercasing is safe here. line-height ≥ 1.02 keeps İ dots inside
+   SplitText mask boxes (they clip at the line box). */
+.type-display {
+  font-family: var(--font-grotesk);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
 }
 
-.voice-mono {
+.type-mono {
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--color-ghost);
+  color: var(--color-mute);
 }
 
-.voice-mono-bright {
+.type-mono-bright {
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--color-pulse);
+  color: var(--color-fg);
 }
 
-.glow-pulse {
-  text-shadow:
-    0 0 18px rgba(56, 225, 255, 0.55),
-    0 0 70px rgba(56, 225, 255, 0.22);
-}
-
-.glow-ember {
-  text-shadow:
-    0 0 18px rgba(255, 74, 38, 0.6),
-    0 0 70px rgba(255, 74, 38, 0.25);
-}
-
-.text-outline {
+.text-outline-w {
   color: transparent;
-  -webkit-text-stroke: 1px rgba(230, 237, 240, 0.32);
+  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.65);
 }
 
 /* ============================================================
@@ -174,11 +165,10 @@ body::after {
   right: 0;
   z-index: 80;
   height: 2px;
-  background: linear-gradient(90deg, var(--color-pulse), var(--color-ember));
+  background: #ffffff;
   transform-origin: left center;
   transform: scaleX(0);
   pointer-events: none;
-  box-shadow: 0 0 12px rgba(56, 225, 255, 0.5);
 }
 
 .hud-corner {
@@ -186,348 +176,505 @@ body::after {
   z-index: 70;
   pointer-events: none;
   font-family: var(--font-mono);
-  font-size: 0.62rem;
+  font-size: 0.6rem;
   font-weight: 500;
-  letter-spacing: 0.24em;
+  letter-spacing: 0.26em;
   text-transform: uppercase;
-  color: var(--color-ghost);
+  color: var(--color-faint);
 }
 
-/* ============================================================
-   Hero
-   ============================================================ */
-
-.hero-name {
-  font-size: clamp(4.25rem, 17.5vw, 15.5rem);
-}
-
-.hero-name .char {
+.custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: #ffffff;
+  pointer-events: none;
+  mix-blend-mode: difference;
   will-change: transform;
 }
 
-.hero-title-slot {
-  position: relative;
-  display: inline-block;
-  min-height: 1.6em;
-}
-
-.hero-title-sizer {
-  visibility: hidden;
-}
-
-.hero-title-live {
-  position: absolute;
-  inset: 0;
-  white-space: nowrap;
-}
-
-.hero-title-live::after {
-  content: "_";
-  color: var(--color-pulse);
-  animation: caret-blink 1.05s steps(2, start) infinite;
-}
-
-@keyframes caret-blink {
-  to {
-    visibility: hidden;
+@media (pointer: coarse) {
+  .custom-cursor {
+    display: none;
   }
 }
 
-.scroll-cue-line {
+/* ============================================================
+   Preloader — bcrypt stream + curtain split
+   ============================================================ */
+
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 95;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preloader-curtain {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50.5%;
+  background: #000000;
+  will-change: transform;
+}
+
+.preloader-curtain--left {
+  left: 0;
+  border-right: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.preloader-curtain--right {
+  right: 0;
+}
+
+.preloader-status {
+  font-family: var(--font-mono);
+  font-size: clamp(0.8rem, 2vw, 1.05rem);
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: var(--color-fg);
+  white-space: nowrap;
+  max-width: 92vw;
+  overflow: hidden;
+}
+
+.preloader-hash {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--color-faint);
+  white-space: nowrap;
+  max-width: 92vw;
+  overflow: hidden;
+}
+
+/* ============================================================
+   Z-axis tunnel — dolly-through layers
+   ============================================================ */
+
+.tunnel-stage {
+  position: relative;
+  min-height: 100svh;
+  overflow: clip;
+}
+
+.tunnel-layer {
+  will-change: transform, opacity;
+}
+
+.tunnel-layer-front {
+  position: relative;
+}
+
+.tunnel-layer-back {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+[data-skew] {
+  will-change: transform;
+}
+
+/* ============================================================
+   Hero typography
+   ============================================================ */
+
+.hero-name {
+  font-size: clamp(3.4rem, 15.5vw, 14rem);
+  line-height: 0.94;
+  white-space: nowrap;
+  will-change: letter-spacing, transform;
+}
+
+.hero-name .char {
+  will-change: transform, opacity;
+}
+
+.hero-manifesto-line {
+  font-family: var(--font-grotesk);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+  font-size: clamp(1.7rem, 4.6vw, 4.2rem);
+}
+
+.scroll-cue-bar {
   width: 1px;
-  height: 64px;
-  background: linear-gradient(180deg, transparent, var(--color-pulse));
+  height: 56px;
+  background: linear-gradient(180deg, transparent, #ffffff);
   transform-origin: top center;
 }
 
 /* ============================================================
-   Journey timeline
+   Manifesto — dark-to-light line reveal
    ============================================================ */
 
-.journey-svg {
-  position: absolute;
-  inset: 0;
+.manifesto-par {
+  font-size: clamp(1.25rem, 2.5vw, 2.15rem);
+  font-weight: 500;
+  line-height: 1.55;
+  letter-spacing: -0.015em;
+  color: var(--color-fg);
+  max-width: 62ch;
+}
+
+.manifesto-par .line {
+  will-change: opacity;
+}
+
+/* ============================================================
+   Experience accordion — screen-wide, invertible rows
+   ============================================================ */
+
+.acc-row {
+  border-top: 1px solid var(--color-line);
+  background: var(--color-bg);
+  color: var(--color-fg);
+  transition: background-color 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.acc-row:last-child {
+  border-bottom: 1px solid var(--color-line);
+}
+
+.acc-row[data-open="true"] {
+  background: #ffffff;
+  color: #000000;
+}
+
+.acc-head {
+  display: grid;
   width: 100%;
-  height: 100%;
-  overflow: visible;
-  pointer-events: none;
-}
-
-.journey-path-base {
-  fill: none;
-  stroke: rgba(230, 237, 240, 0.09);
-  stroke-width: 1.5;
-}
-
-.journey-path-live {
-  fill: none;
-  stroke: url(#journey-stroke);
-  stroke-width: 2.5;
-  stroke-linecap: round;
-}
-
-.journey-path-glow {
-  fill: none;
-  stroke: rgba(56, 225, 255, 0.5);
-  stroke-width: 6;
-  stroke-linecap: round;
-  filter: blur(7px);
-}
-
-.journey-orb {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 16px;
-  height: 16px;
-  border-radius: 999px;
-  background: radial-gradient(circle at 35% 35%, #ffffff, var(--color-pulse) 42%, transparent 78%);
-  box-shadow:
-    0 0 14px rgba(56, 225, 255, 0.95),
-    0 0 46px rgba(56, 225, 255, 0.45);
-  pointer-events: none;
-  will-change: transform;
-}
-
-.node-card {
-  position: relative;
-  border: 1px solid var(--color-line);
-  border-radius: 18px;
-  background: linear-gradient(165deg, rgba(11, 15, 19, 0.92), rgba(3, 3, 3, 0.78));
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  padding: clamp(1.35rem, 3vw, 2.1rem);
-  will-change: transform, opacity;
-  transform-style: preserve-3d;
-}
-
-.node-card::before {
-  content: "";
-  position: absolute;
-  inset: -1px;
-  border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(140deg, rgba(56, 225, 255, 0.4), transparent 38%, rgba(56, 225, 255, 0.08));
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
-  opacity: 0.5;
-}
-
-.node-period {
-  display: inline-flex;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 0.5rem;
-  border: 1px solid rgba(56, 225, 255, 0.35);
-  border-radius: 999px;
-  padding: 0.32rem 0.8rem;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  padding: clamp(1.1rem, 3vw, 2rem) clamp(1.25rem, 4vw, 2.5rem);
+  background: transparent;
+  border: 0;
+  color: inherit;
+  text-align: left;
+}
+
+.acc-index {
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   font-weight: 600;
-  letter-spacing: 0.18em;
-  color: var(--color-pulse);
-  background: rgba(56, 225, 255, 0.06);
+  letter-spacing: 0.2em;
+  color: var(--color-faint);
 }
 
-.node-period::before {
-  content: "";
-  width: 6px;
-  height: 6px;
-  border-radius: 999px;
-  background: var(--color-pulse);
-  box-shadow: 0 0 8px rgba(56, 225, 255, 0.9);
+.acc-row[data-open="true"] .acc-index {
+  color: rgba(0, 0, 0, 0.45);
 }
 
-.tech-chip {
-  display: inline-block;
-  border: 1px solid var(--color-line);
-  border-radius: 6px;
-  padding: 0.3rem 0.6rem;
+.acc-title {
+  font-family: var(--font-grotesk);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.025em;
+  line-height: 1.04;
+  font-size: clamp(1.6rem, 5.2vw, 4.6rem);
+}
+
+.acc-meta {
   font-family: var(--font-mono);
   font-size: 0.66rem;
   font-weight: 500;
-  letter-spacing: 0.1em;
-  color: var(--color-dim);
-  background: rgba(230, 237, 240, 0.03);
-  transition: none;
-  will-change: box-shadow, border-color, color;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-mute);
 }
 
-.project-card {
+.acc-row[data-open="true"] .acc-meta {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.acc-icon {
   position: relative;
-  display: block;
-  border: 1px solid var(--color-line);
-  border-radius: 14px;
-  background: rgba(3, 3, 3, 0.6);
-  padding: 1.1rem 1.15rem 1.2rem;
-  text-decoration: none;
-  color: inherit;
-  will-change: transform;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
 }
 
-/* ============================================================
-   Apex — the Envanty climax
-   ============================================================ */
-
-.apex-stage {
-  position: relative;
-  overflow: clip;
-}
-
-.apex-dim {
+.acc-icon::before,
+.acc-icon::after {
+  content: "";
   position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse 75% 60% at 50% 45%, rgba(3, 3, 3, 0.25), rgba(3, 3, 3, 0.96) 78%);
-  opacity: 0;
-  pointer-events: none;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 2px;
+  background: currentColor;
+  transform: translate(-50%, -50%);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.apex-product {
-  font-size: clamp(4.5rem, 20vw, 19rem);
-  background: linear-gradient(115deg, #ffffff 8%, var(--color-pulse) 48%, var(--color-ember) 96%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  filter: drop-shadow(0 0 32px rgba(56, 225, 255, 0.3));
+.acc-icon::after {
+  transform: translate(-50%, -50%) rotate(90deg);
 }
 
-.apex-stat-value {
-  font-family: var(--font-display);
-  font-size: clamp(3.4rem, 8.5vw, 7rem);
-  line-height: 0.9;
-  color: var(--color-ink);
+.acc-row[data-open="true"] .acc-icon::after {
+  transform: translate(-50%, -50%) rotate(0deg);
 }
 
-.apex-chip {
-  border: 1px solid rgba(56, 225, 255, 0.4);
-  border-radius: 8px;
-  padding: 0.55rem 0.95rem;
+.acc-panel {
+  overflow: hidden;
+  height: 0;
+}
+
+.acc-body {
+  display: grid;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  padding: 0 clamp(1.25rem, 4vw, 2.5rem) clamp(2rem, 5vw, 3.5rem);
+}
+
+@media (min-width: 1024px) {
+  .acc-body {
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 0.5fr);
+  }
+}
+
+.acc-case {
+  font-size: clamp(0.98rem, 1.35vw, 1.15rem);
+  line-height: 1.75;
+  font-weight: 500;
+}
+
+.acc-row[data-open="true"] .acc-case {
+  color: rgba(0, 0, 0, 0.82);
+}
+
+.acc-headline {
+  font-family: var(--font-grotesk);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  font-size: clamp(1.15rem, 2.4vw, 1.9rem);
+}
+
+.acc-tag {
+  display: inline-block;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  padding: 0.32rem 0.75rem;
   font-family: var(--font-mono);
-  font-size: clamp(0.7rem, 1.4vw, 0.92rem);
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  color: var(--color-pulse);
-  background: rgba(56, 225, 255, 0.05);
-  box-shadow: 0 0 24px rgba(56, 225, 255, 0.12) inset;
-  white-space: nowrap;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.75;
 }
 
 /* ============================================================
-   Tech arsenal marquee
+   Magnetic showcase — hover-to-reveal follower
    ============================================================ */
 
-.marquee-mask {
-  overflow: hidden;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-}
-
-.marquee-track {
-  display: flex;
-  width: max-content;
-  will-change: transform;
-}
-
-.marquee-list {
+.show-row {
+  position: relative;
   display: flex;
   align-items: baseline;
-  flex-shrink: 0;
-  gap: clamp(1.4rem, 3.5vw, 3rem);
-  padding-right: clamp(1.4rem, 3.5vw, 3rem);
+  gap: clamp(1rem, 3vw, 2.5rem);
+  padding: clamp(1.4rem, 3.6vw, 2.6rem) clamp(1.25rem, 4vw, 2.5rem);
+  border-top: 1px solid var(--color-line);
+  text-decoration: none;
+  color: inherit;
 }
 
-.arsenal-core {
-  font-family: var(--font-display);
-  font-size: clamp(3rem, 8vw, 6.75rem);
-  line-height: 1;
-  letter-spacing: 0.02em;
-  color: var(--color-ink);
-  white-space: nowrap;
+.show-row:last-of-type {
+  border-bottom: 1px solid var(--color-line);
 }
 
-.arsenal-strong {
-  font-family: var(--font-display);
-  font-size: clamp(1.9rem, 4.6vw, 3.6rem);
+.show-name {
+  font-family: var(--font-grotesk);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.025em;
   line-height: 1;
-  letter-spacing: 0.03em;
+  font-size: clamp(2.1rem, 7vw, 6.2rem);
   color: transparent;
-  -webkit-text-stroke: 1px rgba(230, 237, 240, 0.42);
-  white-space: nowrap;
+  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.55);
+  transition: color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    -webkit-text-stroke-color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
 }
 
-.arsenal-tool {
+.show-row:hover .show-name,
+.show-row:focus-visible .show-name {
+  color: #ffffff;
+  -webkit-text-stroke-color: transparent;
+}
+
+.show-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-left: auto;
+  text-align: right;
+}
+
+.follower {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 60;
+  width: min(26rem, 42vw);
+  height: min(17rem, 28vw);
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0.85);
+  overflow: hidden;
+  will-change: transform, opacity;
+}
+
+.follower::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.35;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 140px 140px;
+  mix-blend-mode: overlay;
+}
+
+.follower[data-pattern="grid"] {
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.16) 0 1px, transparent 1px 44px),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.16) 0 1px, transparent 1px 44px),
+    linear-gradient(140deg, #1a1a1a, #050505);
+}
+
+.follower[data-pattern="waves"] {
+  background:
+    repeating-radial-gradient(circle at 30% 40%, rgba(255, 255, 255, 0.14) 0 2px, transparent 2px 34px),
+    linear-gradient(160deg, #222222, #000000);
+}
+
+.follower[data-pattern="beams"] {
+  background:
+    repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.2) 0 2px, transparent 2px 56px),
+    linear-gradient(200deg, #161616, #030303);
+}
+
+.follower[data-pattern="halftone"] {
+  background-image:
+    radial-gradient(rgba(255, 255, 255, 0.28) 1.5px, transparent 1.5px),
+    linear-gradient(150deg, #1d1d1d, #000000);
+  background-size: 18px 18px, 100% 100%;
+}
+
+.follower-label {
+  position: absolute;
+  left: 1rem;
+  bottom: 0.9rem;
   font-family: var(--font-mono);
-  font-size: clamp(0.85rem, 1.6vw, 1.15rem);
-  font-weight: 500;
-  letter-spacing: 0.18em;
-  color: var(--color-ghost);
-  white-space: nowrap;
-}
-
-.row-aggressive .arsenal-core {
-  text-shadow:
-    0 0 26px rgba(56, 225, 255, 0.35),
-    0 0 90px rgba(56, 225, 255, 0.14);
-}
-
-.row-aggressive .arsenal-strong {
-  -webkit-text-stroke-color: rgba(56, 225, 255, 0.5);
-}
-
-.marquee-divider {
-  color: var(--color-ember);
-  font-family: var(--font-mono);
-  font-size: 1rem;
-  align-self: center;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
 }
 
 /* ============================================================
-   Finale
+   Magnetic button + contact
    ============================================================ */
 
-.finale-mail {
-  font-family: var(--font-display);
-  font-size: clamp(1.9rem, 6.5vw, 5.5rem);
-  line-height: 1;
-  color: var(--color-ink);
+.magnetic-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 999px;
+  padding: 1.15rem 2.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-fg);
+  background: transparent;
+  text-decoration: none;
+  overflow: hidden;
+  position: relative;
+  will-change: transform;
+  transition: color 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.magnetic-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #ffffff;
+  transform: scaleY(0);
+  transform-origin: bottom center;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: -1;
+}
+
+.magnetic-btn:hover {
+  color: #000000;
+  border-color: #ffffff;
+}
+
+.magnetic-btn:hover::before {
+  transform: scaleY(1);
+}
+
+.contact-mail {
+  font-family: var(--font-grotesk);
+  font-weight: 800;
+  font-size: clamp(1.5rem, 5.4vw, 4.6rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--color-fg);
   text-decoration: none;
   position: relative;
   display: inline-block;
 }
 
-.finale-mail::after {
+.contact-mail::after {
   content: "";
   position: absolute;
   left: 0;
   right: 0;
-  bottom: -0.12em;
-  height: 3px;
-  background: linear-gradient(90deg, var(--color-pulse), var(--color-ember));
+  bottom: -0.08em;
+  height: 2px;
+  background: #ffffff;
   transform: scaleX(0);
   transform-origin: left center;
   transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.finale-mail:hover::after {
+.contact-mail:hover::after {
   transform: scaleX(1);
 }
 
-.finale-link {
+.footer-link {
   font-family: var(--font-mono);
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--color-dim);
+  color: var(--color-mute);
   text-decoration: none;
-  transition: color 0.25s ease, text-shadow 0.25s ease;
+  transition: color 0.3s ease;
 }
 
-.finale-link:hover {
-  color: var(--color-pulse);
-  text-shadow: 0 0 16px rgba(56, 225, 255, 0.5);
+.footer-link:hover {
+  color: var(--color-fg);
 }
 
 /* ============================================================
@@ -544,20 +691,29 @@ body::after {
   }
 
   .site-progress,
-  .journey-orb,
-  .journey-path-glow {
+  .custom-cursor,
+  .follower {
     display: none;
+  }
+
+  /* No pin, no zoom: the tunnel's back layer flows in the document
+     right after the front layer. */
+  .tunnel-layer-back {
+    position: relative;
+    inset: auto;
+    pointer-events: auto;
   }
 
   .experience-canvas {
-    opacity: 0.35;
+    opacity: 0.3;
   }
 
-  .hero-title-live {
-    display: none;
+  body {
+    cursor: auto;
   }
 
-  .hero-title-sizer {
-    visibility: visible;
+  .show-name {
+    color: #ffffff;
+    -webkit-text-stroke-color: transparent;
   }
 }

@@ -7,14 +7,14 @@ import dynamic from "next/dynamic";
  * on the server: the canvas is a fixed, pointer-transparent backdrop,
  * so its late arrival can never shift layout (zero CLS by design).
  */
-const DataStreamScene = dynamic(() => import("./DataStreamScene"), {
+const FluidScene = dynamic(() => import("./FluidScene"), {
   ssr: false,
 });
 
-export function ExperienceCanvas() {
+export function FluidCanvas() {
   return (
     <div className="experience-canvas" aria-hidden="true">
-      <DataStreamScene />
+      <FluidScene />
     </div>
   );
 }

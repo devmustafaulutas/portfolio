@@ -1,19 +1,19 @@
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
-import { Bebas_Neue, Inter, JetBrains_Mono } from "next/font/google";
+import { Archivo, JetBrains_Mono } from "next/font/google";
+import { CustomCursor } from "@/components/ui/CustomCursor";
 import { siteConfig } from "@/config/site";
 
-const display = Bebas_Neue({
+/**
+ * Archivo: a tight, muscular grotesk in the Neue Montreal /
+ * Helvetica Now register — and free. To swap in a licensed cut
+ * later, replace this with `next/font/local` and keep the
+ * `--font-archivo` variable name; nothing else has to change.
+ */
+const grotesk = Archivo({
   subsets: ["latin", "latin-ext"],
-  weight: "400",
-  variable: "--font-bebas",
-  display: "swap",
-});
-
-const sans = Inter({
-  subsets: ["latin", "latin-ext"],
-  weight: ["400", "500", "600"],
-  variable: "--font-inter",
+  weight: ["400", "500", "700", "800", "900"],
+  variable: "--font-archivo",
   display: "swap",
 });
 
@@ -63,7 +63,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#030303",
+  themeColor: "#000000",
   width: "device-width",
   initialScale: 1,
 };
@@ -96,7 +96,7 @@ export default function RootLayout({
   return (
     <html
       lang="tr"
-      className={`${display.variable} ${sans.variable} ${mono.variable}`}
+      className={`${grotesk.variable} ${mono.variable}`}
     >
       <body>
         <script
@@ -104,6 +104,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
         />
         {children}
+        <CustomCursor />
       </body>
     </html>
   );

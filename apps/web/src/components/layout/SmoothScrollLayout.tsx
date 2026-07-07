@@ -11,6 +11,7 @@ import {
 import Lenis from "lenis";
 import { ensureGsap, gsap, ScrollTrigger } from "@/lib/gsap";
 import { scrollBus } from "@/lib/scroll-bus";
+import { Preloader } from "@/components/ui/Preloader";
 
 type SmoothScrollContextValue = {
   lenis: Lenis | null;
@@ -106,11 +107,26 @@ export function SmoothScrollLayout({ children }: SmoothScrollLayoutProps) {
     gsap.ticker.add(onTick);
     gsap.ticker.lagSmoothing(0);
 
+    // Kinetic typography: [data-skew] targets lean with scroll
+    // velocity and spring back through the quickTo easing when the
+    // page settles. One ticker drives every setter.
+    const skewSetters = gsap.utils
+      .toArray<HTMLElement>("[data-skew]")
+      .map((element) =>
+        gsap.quickTo(element, "skewX", { duration: 0.4, ease: "power3" }),
+      );
+    const onSkewTick = () => {
+      const lean = gsap.utils.clamp(-5, 5, scrollBus.velocity * 0.07);
+      skewSetters.forEach((setSkew) => setSkew(lean));
+    };
+    gsap.ticker.add(onSkewTick);
+
     instance.scrollTo(0, { immediate: true, force: true });
     setLenis(instance);
 
     return () => {
       gsap.ticker.remove(onTick);
+      gsap.ticker.remove(onSkewTick);
       instance.destroy();
       window.removeEventListener("pointermove", onPointerMove);
       setLenis(null);
@@ -129,12 +145,13 @@ export function SmoothScrollLayout({ children }: SmoothScrollLayoutProps) {
 
   return (
     <SmoothScrollContext.Provider value={{ lenis, scrollTo }}>
+      <Preloader lenis={lenis} />
       <div ref={progressRef} className="site-progress" aria-hidden="true" />
       <div className="hud-corner left-4 top-4 sm:left-6 sm:top-6">
-        MU — DIGITAL JOURNEY
+        MUSTAFA ULUTAŞ — PORTFOLYO
       </div>
       <div className="hud-corner right-4 top-4 text-right sm:right-6 sm:top-6">
-        DEEP TECH &amp; EVOLUTION
+        MONOCHROME SUPREMACY
       </div>
       {children}
     </SmoothScrollContext.Provider>

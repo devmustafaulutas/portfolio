@@ -1,17 +1,14 @@
 import { SmoothScrollLayout } from "@/components/layout/SmoothScrollLayout";
-import { ExperienceCanvas } from "@/components/three/ExperienceCanvas";
+import { FluidCanvas } from "@/components/three/FluidCanvas";
 import { HeroSection } from "@/components/sections/HeroSection";
-import { TheJourneyTimeline } from "@/components/sections/TheJourneyTimeline";
-import { TechArsenalSection } from "@/components/sections/TechArsenalSection";
-import { FinaleSection } from "@/components/sections/FinaleSection";
+import { TheManifestoSection } from "@/components/sections/TheManifestoSection";
+import { ExperienceAccordion } from "@/components/sections/ExperienceAccordion";
+import { MagneticProjectShowcase } from "@/components/sections/MagneticProjectShowcase";
+import { ContactFinale } from "@/components/sections/ContactFinale";
 import { siteConfig } from "@/config/site";
-import {
-  apexData,
-  apexModules,
-  journeyIntro,
-  journeyNodes,
-} from "@/content/journey";
-import { arsenalIntro, arsenalRows } from "@/content/arsenal";
+import { heroContent, heroManifesto, manifestoSection } from "@/content/manifesto";
+import { experienceEntries, experienceSection } from "@/content/experience";
+import { showcaseProjects, showcaseSection } from "@/content/showcase";
 
 /**
  * Server component: owns the data layer and hands plain, serialisable
@@ -20,21 +17,19 @@ import { arsenalIntro, arsenalRows } from "@/content/arsenal";
 export default function HomePage() {
   return (
     <SmoothScrollLayout>
-      <ExperienceCanvas />
+      <FluidCanvas />
       <main id="main" className="relative z-10">
-        <HeroSection
-          name={siteConfig.name}
-          role={siteConfig.role}
-          location={siteConfig.location}
+        <HeroSection hero={heroContent} manifesto={heroManifesto} />
+        <TheManifestoSection content={manifestoSection} />
+        <ExperienceAccordion
+          section={experienceSection}
+          entries={experienceEntries}
         />
-        <TheJourneyTimeline
-          intro={journeyIntro}
-          nodes={journeyNodes}
-          apex={apexData}
-          modules={[...apexModules]}
+        <MagneticProjectShowcase
+          section={showcaseSection}
+          projects={showcaseProjects}
         />
-        <TechArsenalSection intro={arsenalIntro} rows={arsenalRows} />
-        <FinaleSection
+        <ContactFinale
           email={siteConfig.email}
           github={siteConfig.social.github}
           linkedin={siteConfig.social.linkedin}
