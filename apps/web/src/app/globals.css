@@ -204,7 +204,7 @@ body::after {
 }
 
 /* ============================================================
-   Preloader — bcrypt stream + curtain split
+   Preloader — the proof print
    ============================================================ */
 
 .preloader {
@@ -214,70 +214,108 @@ body::after {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.preloader-curtain {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 50.5%;
   background: #000000;
   will-change: transform;
 }
 
-.preloader-curtain--left {
-  left: 0;
-  border-right: 1px solid rgba(255, 255, 255, 0.14);
-}
-
-.preloader-curtain--right {
-  right: 0;
-}
-
-.preloader-status {
-  font-family: var(--font-mono);
-  font-size: clamp(0.8rem, 2vw, 1.05rem);
-  font-weight: 600;
-  letter-spacing: 0.18em;
+.preloader-toc {
+  font-family: var(--font-grotesk);
+  font-weight: 800;
+  font-size: clamp(1.6rem, 5vw, 3rem);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
   color: var(--color-fg);
   white-space: nowrap;
-  max-width: 92vw;
-  overflow: hidden;
 }
 
-.preloader-hash {
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  color: var(--color-faint);
-  white-space: nowrap;
-  max-width: 92vw;
-  overflow: hidden;
+.preloader-rule {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: #ffffff;
+  transform: scaleX(0);
+  transform-origin: left center;
 }
 
 /* ============================================================
-   Z-axis tunnel — dolly-through layers
+   The Technical Print — structural chrome
    ============================================================ */
 
-.tunnel-stage {
-  position: relative;
-  min-height: 100svh;
-  overflow: clip;
-}
-
-.tunnel-layer {
-  will-change: transform, opacity;
-}
-
-.tunnel-layer-front {
-  position: relative;
-}
-
-.tunnel-layer-back {
+.ghost-index {
   position: absolute;
-  inset: 0;
+  right: clamp(0.5rem, 3vw, 2.5rem);
+  top: clamp(4rem, 10vh, 7rem);
+  z-index: -1;
+  font-family: var(--font-grotesk);
+  font-weight: 800;
+  font-size: clamp(8rem, 24vw, 22rem);
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.09);
   pointer-events: none;
+  user-select: none;
+}
+
+.section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem 2rem;
+  border-top: 1px solid var(--color-line);
+  padding-top: 0.85rem;
+  margin-bottom: 1.75rem;
+}
+
+.hero-mark {
+  font-size: 0.32em;
+  vertical-align: super;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.65);
+}
+
+.pulse-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #ffffff;
+  animation: pulse-dot 1.8s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+  }
+  50% {
+    opacity: 0.55;
+    box-shadow: 0 0 0 5px rgba(255, 255, 255, 0);
+  }
+}
+
+.hud-divider {
+  color: var(--color-faint);
+}
+
+.grid-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 85;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.07) 0 1px,
+    transparent 1px calc((100% - 11px) / 12 + 1px)
+  );
+  margin-inline: clamp(1.25rem, 4vw, 2.5rem);
+}
+
+.grid-overlay[data-visible="true"] {
+  opacity: 1;
 }
 
 [data-skew] {
@@ -524,6 +562,24 @@ body::after {
   text-align: right;
 }
 
+.show-arrow {
+  font-family: var(--font-mono);
+  font-size: clamp(1.1rem, 2.4vw, 1.8rem);
+  color: var(--color-faint);
+  transform: translate(-6px, 6px);
+  opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.4s ease;
+}
+
+.show-row:hover .show-arrow,
+.show-row:focus-visible .show-arrow {
+  transform: translate(0, 0);
+  opacity: 1;
+  color: var(--color-fg);
+}
+
 .follower {
   position: fixed;
   top: 0;
@@ -696,12 +752,12 @@ body::after {
     display: none;
   }
 
-  /* No pin, no zoom: the tunnel's back layer flows in the document
-     right after the front layer. */
-  .tunnel-layer-back {
-    position: relative;
-    inset: auto;
-    pointer-events: auto;
+  .pulse-dot {
+    animation: none;
+  }
+
+  .grid-overlay {
+    display: none;
   }
 
   .experience-canvas {

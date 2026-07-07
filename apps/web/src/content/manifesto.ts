@@ -6,8 +6,10 @@
 export const heroContent = {
   name: "MUSTAFA ULUTAŞ",
   role: "Backend Architect & Full-Stack Developer",
-  meta: ["KOCAELİ — TÜRKİYE", "EST. 2025", "MONOCHROME EDITION"],
-  scrollCue: "KAYDIR — TÜNELE DAL",
+  meta: ["KOCAELİ — 40.68°N 30.05°E", "REV 2026.07", "SİYAH ÜZERİNE BEYAZ"],
+  strip: ".NET · CLEAN ARCHITECTURE · CQRS — REACT + TYPESCRIPT",
+  status: "SİSTEM DURUMU — CANLI · 02 KURUMSAL MÜŞTERİ",
+  scrollCue: "KEŞFET — BÖLÜM 01",
 } as const;
 
 /**

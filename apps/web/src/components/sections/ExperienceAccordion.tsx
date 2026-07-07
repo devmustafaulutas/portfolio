@@ -130,10 +130,17 @@ export function ExperienceAccordion({
     <section
       ref={sectionRef}
       id="experience"
+      data-chapter="KARİYER"
       className="relative py-28 sm:py-40"
     >
+      <span className="ghost-index" aria-hidden="true">
+        02
+      </span>
       <header className="px-5 pb-14 sm:px-10 sm:pb-20">
-        <p className="type-mono mb-6">{section.label}</p>
+        <div className="section-head">
+          <span className="type-mono-bright">{section.label}</span>
+          <span className="type-mono">SAYFA 03 / 05</span>
+        </div>
         <h2
           ref={titleRef}
           data-skew

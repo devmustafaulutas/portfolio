@@ -154,10 +154,17 @@ export function MagneticProjectShowcase({
     <section
       ref={sectionRef}
       id="work"
+      data-chapter="İŞLER"
       className="relative py-28 sm:py-40"
     >
+      <span className="ghost-index" aria-hidden="true">
+        03
+      </span>
       <header className="px-5 pb-14 sm:px-10 sm:pb-20">
-        <p className="type-mono mb-6">{section.label}</p>
+        <div className="section-head">
+          <span className="type-mono-bright">{section.label}</span>
+          <span className="type-mono">SAYFA 04 / 05</span>
+        </div>
         <h2
           ref={titleRef}
           data-skew
@@ -186,12 +193,15 @@ export function MagneticProjectShowcase({
               {project.name}
             </span>
             <span className="show-meta">
-              <span className="type-mono-bright">
+              {/* lang="en": brand names must not pick up Turkish
+                  dotted-İ casing (TypeScript → TYPESCRİPT). */}
+              <span lang="en" className="type-mono-bright">
                 {project.stack.join(" + ")}
               </span>
-              <span className="type-mono hidden max-w-64 normal-case tracking-[0.06em] sm:block">
-                {project.blurb}
-              </span>
+              <span className="type-mono">{project.year}</span>
+            </span>
+            <span className="show-arrow" aria-hidden="true">
+              ↗
             </span>
           </a>
         ))}

@@ -7,37 +7,33 @@ import { scrollBus } from "@/lib/scroll-bus";
 import { introBus } from "@/lib/intro-bus";
 import { DECRYPT_CHARS } from "@/lib/kinetic";
 import { Magnetic } from "@/components/ui/Magnetic";
-import { ZAxisTunnelLayout } from "@/components/layout/ZAxisTunnelLayout";
 import { useSmoothScroll } from "@/components/layout/SmoothScrollLayout";
 
 type HeroContent = {
   name: string;
   role: string;
   meta: readonly string[];
+  strip: string;
+  status: string;
   scrollCue: string;
-};
-
-type HeroManifesto = {
-  kicker: string;
-  lines: readonly string[];
 };
 
 type HeroSectionProps = {
   hero: HeroContent;
-  manifesto: HeroManifesto;
 };
 
 /**
- * Act I, tunnel edition. After the curtains split, the name decrypts
- * from cipher characters into "MUSTAFA ULUTAŞ" and the letters keep
- * breathing with the pointer. Scrolling doesn't scroll — it flies:
- * the ZAxisTunnelLayout dollies the name 18× past the lens while the
- * manifesto arrives from the far end of the Z axis.
+ * The masthead. No ride, no hijack: two monumental lines rise out of
+ * masked slots after the press roller lifts, the role decrypts, and
+ * the letters keep breathing with the pointer. On scroll the lines
+ * drift apart horizontally at opposing speeds — a confident,
+ * editorial exit instead of a fairground zoom.
  */
-export function HeroSection({ hero, manifesto }: HeroSectionProps) {
-  const contentRef = useRef<HTMLDivElement>(null);
+export function HeroSection({ hero }: HeroSectionProps) {
+  const sectionRef = useRef<HTMLElement>(null);
   const firstLineRef = useRef<HTMLSpanElement>(null);
   const lastLineRef = useRef<HTMLSpanElement>(null);
+  const roleRef = useRef<HTMLParagraphElement>(null);
   const cueBarRef = useRef<HTMLSpanElement>(null);
   const { scrollTo } = useSmoothScroll();
 
@@ -47,52 +43,49 @@ export function HeroSection({ hero, manifesto }: HeroSectionProps) {
   useGSAP(
     () => {
       ensureGsap();
+      const section = sectionRef.current;
       const firstLine = firstLineRef.current;
       const lastLine = lastLineRef.current;
-      if (!firstLine || !lastLine) return;
+      const role = roleRef.current;
+      if (!section || !firstLine || !lastLine || !role) return;
 
       const mm = gsap.matchMedia();
 
       mm.add("(prefers-reduced-motion: no-preference)", () => {
-        // Hold everything dark until the curtains grant access
-        gsap.set([firstLine, lastLine], { autoAlpha: 0, y: 42 });
-        gsap.set("[data-hero-meta]", { autoAlpha: 0, y: 16 });
+        // Held below the fold of their masks until the press lifts
+        gsap.set([firstLine, lastLine], { yPercent: 112 });
+        gsap.set("[data-hero-meta]", { autoAlpha: 0, y: 14 });
 
         const playEntrance = () => {
           const entrance = gsap.timeline();
           entrance
-            .to(firstLine, { autoAlpha: 1, y: 0, duration: 0.6 }, 0)
-            .to(
-              firstLine,
-              {
-                duration: 1.15,
-                ease: "none",
-                scrambleText: {
-                  text: firstName,
-                  chars: DECRYPT_CHARS,
-                  speed: 0.4,
-                },
-              },
-              0.05,
-            )
-            .to(lastLine, { autoAlpha: 1, y: 0, duration: 0.6 }, 0.28)
+            .to(firstLine, {
+              yPercent: 0,
+              duration: 1.1,
+              ease: "monoOut",
+            })
             .to(
               lastLine,
+              { yPercent: 0, duration: 1.1, ease: "monoOut" },
+              0.12,
+            )
+            .to(
+              role,
               {
-                duration: 1.15,
+                duration: 1.1,
                 ease: "none",
                 scrambleText: {
-                  text: lastName,
+                  text: hero.role,
                   chars: DECRYPT_CHARS,
                   speed: 0.4,
                 },
               },
-              0.33,
+              0.5,
             )
             .to(
               "[data-hero-meta]",
-              { autoAlpha: 1, y: 0, duration: 0.7, stagger: 0.09 },
-              1.0,
+              { autoAlpha: 1, y: 0, duration: 0.7, stagger: 0.08 },
+              0.7,
             );
         };
 
@@ -107,25 +100,46 @@ export function HeroSection({ hero, manifesto }: HeroSectionProps) {
           duration: 0.6,
           ease: "power2",
         });
-        const shiftFirst = gsap.quickTo(firstLine, "x", {
-          duration: 0.8,
-          ease: "power2",
-        });
-        const shiftLast = gsap.quickTo(lastLine, "x", {
-          duration: 0.8,
-          ease: "power2",
-        });
 
         const onPointerTick = () => {
-          const spread = scrollBus.pointerX * 14;
+          const spread = scrollBus.pointerX * 12;
           spacingFirst(spread);
           spacingLast(spread * 0.7);
-          shiftFirst(scrollBus.pointerX * -18);
-          shiftLast(scrollBus.pointerX * 18);
         };
         gsap.ticker.add(onPointerTick);
 
-        // The cue breathes until the flight begins
+        // Editorial exit: the masthead splits apart as the reader leaves
+        gsap.to(firstLine, {
+          xPercent: -9,
+          ease: "none",
+          scrollTrigger: {
+            trigger: section,
+            start: "top top",
+            end: "bottom top",
+            scrub: 1,
+          },
+        });
+        gsap.to(lastLine, {
+          xPercent: 9,
+          ease: "none",
+          scrollTrigger: {
+            trigger: section,
+            start: "top top",
+            end: "bottom top",
+            scrub: 1,
+          },
+        });
+        gsap.to("[data-hero-fade]", {
+          autoAlpha: 0,
+          ease: "none",
+          scrollTrigger: {
+            trigger: section,
+            start: "top top",
+            end: "55% top",
+            scrub: true,
+          },
+        });
+
         if (cueBarRef.current) {
           gsap.fromTo(
             cueBarRef.current,
@@ -146,16 +160,23 @@ export function HeroSection({ hero, manifesto }: HeroSectionProps) {
         };
       });
     },
-    { scope: contentRef },
+    { scope: sectionRef },
   );
 
-  const frontLayer = (
-    <div
-      ref={contentRef}
-      className="flex min-h-svh flex-col justify-between px-5 pb-10 pt-20 sm:px-10"
+  return (
+    <section
+      ref={sectionRef}
+      id="hero"
+      data-chapter="GİRİŞ"
+      className="relative flex min-h-svh flex-col justify-between overflow-hidden px-5 pb-10 pt-20 sm:px-10"
     >
+      <span className="ghost-index" aria-hidden="true">
+        00
+      </span>
+
       <div
         data-hero-meta
+        data-hero-fade
         className="type-mono flex flex-wrap items-center gap-x-6 gap-y-2"
       >
         {hero.meta.map((item) => (
@@ -165,27 +186,52 @@ export function HeroSection({ hero, manifesto }: HeroSectionProps) {
 
       <div className="flex flex-1 flex-col items-start justify-center">
         <h1 className="type-display hero-name">
-          <span ref={firstLineRef} className="block">
-            {firstName}
+          <span className="block overflow-hidden">
+            <span ref={firstLineRef} className="block">
+              {firstName}
+            </span>
           </span>
-          <span ref={lastLineRef} className="block text-outline-w">
-            {lastName}
+          <span
+            data-hero-meta
+            className="type-mono my-3 block sm:my-4"
+          >
+            {hero.strip}
+          </span>
+          <span className="block overflow-hidden">
+            <span ref={lastLineRef} className="block text-outline-w">
+              {lastName}
+              <span className="hero-mark" aria-hidden="true">
+                ©
+              </span>
+            </span>
           </span>
         </h1>
         {/* lang="en": English role title must not pick up Turkish
-            dotted-İ rules during CSS uppercasing. */}
-        <p data-hero-meta lang="en" className="type-mono-bright mt-8">
-          {hero.role}
+            dotted-İ rules during CSS uppercasing. The sizer keeps the
+            slot height stable while ScrambleText types into it. */}
+        <p
+          data-hero-meta
+          lang="en"
+          className="type-mono-bright mt-8"
+          aria-label={hero.role}
+        >
+          <span ref={roleRef} aria-hidden="true">
+            {hero.role}
+          </span>
         </p>
       </div>
 
-      <div data-hero-meta className="flex items-end justify-between gap-6">
+      <div
+        data-hero-meta
+        data-hero-fade
+        className="flex flex-wrap items-end justify-between gap-6"
+      >
         <Magnetic strength={0.3}>
           <button
             type="button"
             onClick={() => scrollTo("#manifesto")}
             className="group flex items-center gap-4 border-0 bg-transparent p-0 text-left"
-            aria-label="Tünelden manifestoya geç"
+            aria-label="Manifestoya in"
           >
             <span ref={cueBarRef} className="scroll-cue-bar" />
             <span className="type-mono transition-colors duration-300 group-hover:text-fg">
@@ -193,28 +239,8 @@ export function HeroSection({ hero, manifesto }: HeroSectionProps) {
             </span>
           </button>
         </Magnetic>
-        <span className="type-mono hidden sm:block">01 / 05</span>
+        <span className="type-mono">{hero.status}</span>
       </div>
-    </div>
-  );
-
-  const backLayer = (
-    <div className="flex min-h-svh flex-col items-center justify-center px-5 text-center">
-      <p className="type-mono mb-8">{manifesto.kicker}</p>
-      {manifesto.lines.map((line) => (
-        <span key={line} className="hero-manifesto-line block py-1">
-          {line}
-        </span>
-      ))}
-    </div>
-  );
-
-  return (
-    <ZAxisTunnelLayout
-      id="hero"
-      front={frontLayer}
-      back={backLayer}
-      length={260}
-    />
+    </section>
   );
 }

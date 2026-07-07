@@ -12,8 +12,14 @@ type ManifestoContent = {
   paragraphs: readonly ManifestoParagraph[];
 };
 
+type ManifestoOpener = {
+  kicker: string;
+  lines: readonly string[];
+};
+
 type TheManifestoSectionProps = {
   content: ManifestoContent;
+  opener: ManifestoOpener;
 };
 
 /**
@@ -22,7 +28,10 @@ type TheManifestoSectionProps = {
  * the reading zone. autoSplit keeps line-breaking honest across
  * font swaps and resizes.
  */
-export function TheManifestoSection({ content }: TheManifestoSectionProps) {
+export function TheManifestoSection({
+  content,
+  opener,
+}: TheManifestoSectionProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
 
@@ -38,6 +47,18 @@ export function TheManifestoSection({ content }: TheManifestoSectionProps) {
         if (titleRef.current) {
           decryptOnScroll(titleRef.current);
         }
+
+        // The opening statement rises out of masked slots
+        gsap.from("[data-opener-line]", {
+          yPercent: 112,
+          duration: 1.05,
+          ease: "monoOut",
+          stagger: 0.14,
+          scrollTrigger: {
+            trigger: "[data-manifesto-opener]",
+            start: "top 62%",
+          },
+        });
 
         gsap.from("[data-manifesto-label]", {
           opacity: 0,
@@ -80,11 +101,32 @@ export function TheManifestoSection({ content }: TheManifestoSectionProps) {
     <section
       ref={sectionRef}
       id="manifesto"
+      data-chapter="MANİFESTO"
       className="relative px-5 py-28 sm:px-10 sm:py-40"
     >
-      <p data-manifesto-label className="type-mono mb-6">
-        {content.label}
-      </p>
+      <span className="ghost-index" aria-hidden="true">
+        01
+      </span>
+
+      {/* The opening statement — a full-viewport declaration */}
+      <div
+        data-manifesto-opener
+        className="mb-28 flex min-h-[70svh] flex-col items-start justify-center sm:mb-40"
+      >
+        <p className="type-mono mb-8">{opener.kicker}</p>
+        {opener.lines.map((line) => (
+          <span key={line} className="block overflow-hidden py-1">
+            <span data-opener-line className="hero-manifesto-line block">
+              {line}
+            </span>
+          </span>
+        ))}
+      </div>
+
+      <div data-manifesto-label className="section-head">
+        <span className="type-mono-bright">{content.label}</span>
+        <span className="type-mono">SAYFA 02 / 05</span>
+      </div>
       <h2
         ref={titleRef}
         data-skew

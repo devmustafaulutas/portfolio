@@ -19,8 +19,8 @@ export default function HomePage() {
     <SmoothScrollLayout>
       <FluidCanvas />
       <main id="main" className="relative z-10">
-        <HeroSection hero={heroContent} manifesto={heroManifesto} />
-        <TheManifestoSection content={manifestoSection} />
+        <HeroSection hero={heroContent} />
+        <TheManifestoSection content={manifestoSection} opener={heroManifesto} />
         <ExperienceAccordion
           section={experienceSection}
           entries={experienceEntries}

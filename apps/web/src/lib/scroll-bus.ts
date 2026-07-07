@@ -14,12 +14,6 @@ export type ScrollBus = {
   /** Normalised pointer position, -1..1 (0,0 = viewport centre). */
   pointerX: number;
   pointerY: number;
-  /**
-   * Tunnel intensity, 0..1 — peaks mid-flight through the Z-axis
-   * tunnel; the WebGL warp field reads it to hurl particles at the
-   * camera in sync with the DOM zoom.
-   */
-  warp: number;
 };
 
 export const scrollBus: ScrollBus = {
@@ -27,5 +21,4 @@ export const scrollBus: ScrollBus = {
   velocity: 0,
   pointerX: 0,
   pointerY: 0,
-  warp: 0,
 };

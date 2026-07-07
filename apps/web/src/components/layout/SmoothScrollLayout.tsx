@@ -12,6 +12,7 @@ import Lenis from "lenis";
 import { ensureGsap, gsap, ScrollTrigger } from "@/lib/gsap";
 import { scrollBus } from "@/lib/scroll-bus";
 import { Preloader } from "@/components/ui/Preloader";
+import { InstrumentPanel } from "@/components/ui/InstrumentPanel";
 
 type SmoothScrollContextValue = {
   lenis: Lenis | null;
@@ -148,11 +149,9 @@ export function SmoothScrollLayout({ children }: SmoothScrollLayoutProps) {
       <Preloader lenis={lenis} />
       <div ref={progressRef} className="site-progress" aria-hidden="true" />
       <div className="hud-corner left-4 top-4 sm:left-6 sm:top-6">
-        MUSTAFA ULUTAŞ — PORTFOLYO
+        MUSTAFA ULUTAŞ — PORTFOLYO ©2026
       </div>
-      <div className="hud-corner right-4 top-4 text-right sm:right-6 sm:top-6">
-        MONOCHROME SUPREMACY
-      </div>
+      <InstrumentPanel />
       {children}
     </SmoothScrollContext.Provider>
   );

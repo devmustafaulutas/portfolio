@@ -63,10 +63,17 @@ export function ContactFinale({
     <section
       ref={sectionRef}
       id="contact"
+      data-chapter="İLETİŞİM"
       className="relative flex min-h-svh flex-col justify-between px-5 pb-8 pt-28 sm:px-10 sm:pt-40"
     >
+      <span className="ghost-index" aria-hidden="true">
+        04
+      </span>
       <div>
-        <p className="type-mono mb-6">04 — İLETİŞİM</p>
+        <div className="section-head">
+          <span className="type-mono-bright">04 — İLETİŞİM</span>
+          <span className="type-mono">SAYFA 05 / 05 — SON</span>
+        </div>
         <h2
           ref={titleRef}
           data-skew
@@ -112,17 +119,29 @@ export function ContactFinale({
         </div>
       </div>
 
+      {/* Künye — the colophon every printed document deserves */}
       <footer
-        className="mt-24 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6"
+        className="mt-24 grid gap-8 border-t border-line pt-8 sm:grid-cols-4"
         data-finale-item
       >
-        <p className="type-mono">
-          © {year} {name.toLocaleUpperCase("tr-TR")} — SİYAH. BEYAZ.
-          PRODUCTION.
-        </p>
-        <p className="type-mono">
-          NEXT.JS — GSAP — LENIS — REACT THREE FIBER
-        </p>
+        <div>
+          <p className="type-mono mb-2 text-faint">KÜNYE</p>
+          <p className="type-mono">
+            © {year} {name.toLocaleUpperCase("tr-TR")}
+          </p>
+        </div>
+        <div>
+          <p className="type-mono mb-2 text-faint">DİZGİ</p>
+          <p className="type-mono">ARCHIVO — JETBRAINS MONO</p>
+        </div>
+        <div>
+          <p className="type-mono mb-2 text-faint">MOTOR</p>
+          <p className="type-mono">NEXT.JS · GSAP · LENIS · R3F</p>
+        </div>
+        <div>
+          <p className="type-mono mb-2 text-faint">BASKI</p>
+          <p className="type-mono">SİYAH №1 — REV 2026.07 · G: GRID</p>
+        </div>
       </footer>
     </section>
   );
