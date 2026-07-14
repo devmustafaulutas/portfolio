@@ -146,7 +146,7 @@ export default function ContactFinale() {
         <p
           data-watermark
           aria-hidden
-          className="text-outline-thin pointer-events-none -mb-[0.23em] select-none text-center font-display text-[clamp(6rem,22vw,20rem)] uppercase leading-none"
+          className="text-outline-thin pointer-events-none -mb-[0.08em] select-none pb-[0.18em] text-center font-display text-[clamp(6rem,22vw,20rem)] uppercase leading-none"
         >
           ULUTAŞ
         </p>

@@ -168,7 +168,7 @@ export default function Hero() {
       <div className="relative flex h-full flex-col justify-between px-5 pb-7 pt-20 md:px-10 md:pb-9 md:pt-24">
         <div
           data-hero-top
-          className="flex flex-wrap items-start justify-between gap-4 font-mono text-[10px] tracking-[0.22em] md:text-[11px]"
+          className="flex flex-wrap items-start justify-between gap-4 font-mono text-[10px] leading-tr tracking-[0.18em] md:text-[11px]"
         >
           <p data-hero-fade className="opacity-55">
             {heroContent.kicker}
@@ -186,17 +186,20 @@ export default function Hero() {
         <div ref={titleWrapRef} className="flex flex-col items-center text-center will-change-transform">
           <h1
             ref={titleRef}
-            className="font-display uppercase leading-[0.85] will-change-transform"
+            className="font-display uppercase will-change-transform"
           >
             <span className="line-mask">
-              <span data-hero-inner className="block text-[clamp(4.2rem,17vw,15rem)]">
+              <span
+                data-hero-inner
+                className="block py-[0.06em] text-[clamp(4.2rem,17vw,15rem)] leading-none"
+              >
                 {heroContent.firstName}
               </span>
             </span>
             <span className="line-mask">
               <span
                 data-hero-inner
-                className="text-outline block text-[clamp(4.2rem,17vw,15rem)]"
+                className="text-outline block pt-[0.06em] pb-[0.2em] text-[clamp(4.2rem,17vw,15rem)] leading-none"
               >
                 {heroContent.lastName}
               </span>
@@ -204,14 +207,14 @@ export default function Hero() {
           </h1>
           <p
             data-hero-fade
-            className="mt-6 font-mono text-[11px] tracking-[0.4em] opacity-80 md:text-sm"
+            className="mt-6 font-mono text-[11px] leading-tr tracking-[0.32em] opacity-80 md:text-sm"
           >
             {heroContent.role}
           </p>
           <p
             data-hero-statement
             data-hero-fade
-            className="mt-5 max-w-md text-sm leading-relaxed opacity-65 md:max-w-lg md:text-base"
+            className="mt-5 max-w-md text-sm leading-[1.75] tracking-[0.01em] opacity-65 md:max-w-lg md:text-base"
           >
             {heroContent.statement}
           </p>
@@ -219,11 +222,10 @@ export default function Hero() {
 
         <div
           data-hero-bottom
-          className="flex items-end justify-between font-mono text-[10px] tracking-[0.22em] md:text-[11px]"
+          className="flex items-end justify-between font-mono text-[10px] leading-tr tracking-[0.18em] md:text-[11px]"
         >
-          <p data-hero-fade className="flex items-center gap-3">
-            <span className="pulse-dot" aria-hidden />
-            {heroContent.status}
+          <p data-hero-fade className="flex items-center gap-3" aria-hidden>
+            <span className="pulse-dot" />
           </p>
           <p data-hero-fade className="opacity-55">
             {heroContent.scrollCue} ↓

@@ -67,15 +67,23 @@ body {
 }
 
 /* ------------------------------------------------------------
-   Satır maskesi · maskeli başlıklarda İ noktası / Ş çengeli
-   gibi taşan glifler kırpılmasın diye klip alanı padding ile
-   genişletilir, negatif margin görsel aralığı korur.
+   Satır maskesi · reveal animasyonu için taşmayı keser.
+   Türkçe diyakritikler (İ noktası, Ş çengeli) + text-stroke
+   satır kutusunun dışında kaldığı için klip alanına asimetrik
+   pay verilir; negatif margin görsel aralığı korur.
    ------------------------------------------------------------ */
 @utility line-mask {
   display: block;
   overflow: hidden;
-  padding-block: 0.14em;
-  margin-block: -0.14em;
+  padding-top: 0.22em;
+  padding-bottom: 0.55em;
+  margin-top: -0.22em;
+  margin-bottom: -0.55em;
+}
+
+/* Büyük İ / Ü noktaları ve Ş çengeli için mono satır yüksekliği */
+@utility leading-tr {
+  line-height: 1.85;
 }
 
 /* ------------------------------------------------------------

@@ -136,7 +136,7 @@ export default function BootSequence() {
       role="presentation"
     >
       <div className="flex h-full flex-col justify-between p-6 md:p-10">
-        <div className="flex items-start justify-between font-mono text-[10px] tracking-[0.3em] opacity-60 md:text-[11px]">
+        <div className="flex items-start justify-between font-mono text-[10px] leading-tr tracking-[0.22em] opacity-60 md:text-[11px]">
           <span>{bootContent.cornerTopLeft}</span>
           <span>{bootContent.cornerTopRight}</span>
         </div>
@@ -144,17 +144,17 @@ export default function BootSequence() {
         <div className="flex flex-col items-center text-center">
           <p
             ref={nameRef}
-            className="font-display text-[clamp(2.4rem,9vw,7rem)] uppercase leading-none opacity-0"
+            className="font-display pb-[0.12em] text-[clamp(2.4rem,9vw,7rem)] uppercase leading-none opacity-0"
           >
             {bootContent.name}
           </p>
-          <p ref={hashRef} className="mt-6 font-mono text-[10px] tracking-[0.2em] opacity-40 md:text-xs">
+          <p ref={hashRef} className="mt-6 font-mono text-[10px] leading-tr tracking-[0.2em] opacity-40 md:text-xs">
             SHA: ····················
           </p>
         </div>
 
         <div className="flex items-end justify-between gap-8">
-          <div className="font-mono text-[10px] leading-relaxed tracking-[0.12em] opacity-70 md:text-[11px]">
+          <div className="font-mono text-[10px] leading-tr tracking-[0.12em] opacity-70 md:text-[11px]">
             {bootContent.logLines.map((line) => (
               <p key={line} data-boot-line className="opacity-0">
                 <span className="mr-2 inline-block">▸</span>

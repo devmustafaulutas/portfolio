@@ -62,7 +62,7 @@ export default function Header() {
 
   return (
     <header className="pointer-events-none fixed inset-x-0 top-0 z-[60] mix-blend-difference">
-      <div className="flex items-center justify-between px-5 py-5 font-mono text-[10px] tracking-[0.25em] text-white md:px-10 md:text-[11px]">
+      <div className="flex items-center justify-between px-5 py-5 font-mono text-[10px] leading-tr tracking-[0.2em] text-white md:px-10 md:text-[11px]">
         <a href="#giris" onClick={handleHashNavigation} className="pointer-events-auto" data-scramble-host>
           <ScrambleText text="MUSTAFA ULUTAŞ" trigger="parent" />
         </a>
@@ -72,7 +72,12 @@ export default function Header() {
             KOCAELİ {time ?? "--:--"}
           </span>
           <Magnetic strength={0.3}>
-            <a href="#iletisim" onClick={handleHashNavigation} className="border border-white px-3 py-1.5" data-scramble-host>
+            <a
+              href="#iletisim"
+              onClick={handleHashNavigation}
+              className="border border-white px-3.5 py-2 leading-tr"
+              data-scramble-host
+            >
               <ScrambleText text="İLETİŞİM" trigger="parent" />
             </a>
           </Magnetic>

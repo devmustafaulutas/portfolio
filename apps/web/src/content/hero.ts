@@ -6,9 +6,6 @@
 export const bootContent = {
   logLines: [
     "BAĞLANTI KURULUYOR: mustafaulutas.com",
-    "ÇEKİRDEK YÜKLENİYOR: CLEAN ARCHITECTURE / CQRS",
-    "KİMLİK DOĞRULANIYOR: JWT · RBAC",
-    "TENANT İZOLASYONU: AKTİF",
     "SİSTEM GÜNLÜĞÜ AÇILIYOR",
   ],
   cornerTopLeft: "SİSTEM GÜNLÜĞÜ",
@@ -19,7 +16,7 @@ export const bootContent = {
 } as const;
 
 export const heroContent = {
-  kicker: "SİSTEM GÜNLÜĞÜ / GİRİŞ KAYDI",
+  kicker: "SİSTEM GÜNLÜĞÜ",
   firstName: "MUSTAFA",
   lastName: "ULUTAŞ",
   role: "FULL-STACK SOFTWARE DEVELOPER",
@@ -31,5 +28,4 @@ export const heroContent = {
     { label: "DURUM", value: "SOFTWARE DEVELOPER" },
   ],
   scrollCue: "KAYDIR VE SİSTEME GİR",
-  status: "SİSTEM CANLI",
 } as const;
