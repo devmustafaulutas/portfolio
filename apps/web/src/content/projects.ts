@@ -54,13 +54,13 @@ export const projects: ProjectEntry[] = [
   {
     id: "coffee-lounge",
     index: "03",
-    name: "THEBESTCOFFEELOUNGE.COM",
+    name: "THEBESTOFCOFFEELOUNGE.COM",
     description:
       "Kafeye özel, mobil öncelikli dijital menü. Kategori bazlı yapı, panelden güncellenen içerik; masada QR ile açılıyor.",
     stack: ["Next.js", "React", "TypeScript"],
     role: "FREELANCER",
     interesting: "Menü içeriği dinamik; kafe menüyü kod dokunuşu olmadan güncelliyor.",
-    href: "https://thebestcoffeelounge.com",
+    href: "https://thebestofcoffeelounge.com",
     sketch: "qr",
   },
   {

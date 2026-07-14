@@ -68,7 +68,7 @@ export const journeyChapters: JourneyChapter[] = [
     bullets: [
       "baranboya.com: PHP/Laravel, MySQL, rol bazlı yetkilendirme ve 2FA",
       "prosetelevator.com: Next.js, SEO ve performans odaklı kurumsal site",
-      "thebestcoffeelounge.com: Next.js, panelden yönetilen QR dijital menü",
+      "thebestofcoffeelounge.com: Next.js, panelden yönetilen QR dijital menü",
     ],
     tags: ["LARAVEL", "NEXT.JS", "MYSQL", "2FA", "SEO"],
   },

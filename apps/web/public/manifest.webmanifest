@@ -1,0 +1,16 @@
+{
+  "name": "Mustafa Ulutaş · Full-Stack Software Developer",
+  "short_name": "Mustafa Ulutaş",
+  "description": "Backend ağırlıklı Full-Stack .NET geliştiricisi. Legacy bir HRM ürününü ASP.NET Core, Clean Architecture, CQRS ve React + TypeScript ile multi-tenant SaaS mimarisine taşıdım; sistem iki kurumsal şirkette canlı çalışıyor.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#060606",
+  "theme_color": "#060606",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

@@ -4,6 +4,7 @@ import { useEffect, type ReactNode } from "react";
 import Lenis from "lenis";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { bootBus } from "@/lib/boot-bus";
+import { setLenis } from "@/lib/lenis-store";
 
 /**
  * Lenis + ScrollTrigger entegrasyonu.
@@ -26,6 +27,7 @@ export default function SmoothScroll({ children }: { children: ReactNode }) {
       duration: 1.1,
       smoothWheel: true,
     });
+    setLenis(lenis);
 
     lenis.on("scroll", ScrollTrigger.update);
 
@@ -40,6 +42,7 @@ export default function SmoothScroll({ children }: { children: ReactNode }) {
 
     return () => {
       unsubscribe();
+      setLenis(null);
       gsap.ticker.remove(tick);
       lenis.destroy();
     };

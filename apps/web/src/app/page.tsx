@@ -2,7 +2,8 @@ import Hero from "@/components/sections/Hero";
 import Manifesto from "@/components/sections/Manifesto";
 import Journey from "@/components/sections/Journey";
 import CaseFiles from "@/components/sections/CaseFiles";
-import Arsenal from "@/components/sections/Arsenal";
+// Arsenal bölümü şimdilik kapalı; geri açarken import'u da aç.
+// import Arsenal from "@/components/sections/Arsenal";
 import ProjectIndex from "@/components/sections/ProjectIndex";
 import ContactFinale from "@/components/sections/ContactFinale";
 import { site } from "@/config/site";
