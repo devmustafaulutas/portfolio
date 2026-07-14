@@ -1,91 +1,59 @@
-import "./globals.css";
 import type { Metadata, Viewport } from "next";
-import { Archivo, JetBrains_Mono } from "next/font/google";
-import { CustomCursor } from "@/components/ui/CustomCursor";
-import { siteConfig } from "@/config/site";
+import { Anton, Space_Grotesk, JetBrains_Mono } from "next/font/google";
+import "./globals.css";
+import { site } from "@/config/site";
+import SmoothScroll from "@/components/providers/SmoothScroll";
+import BootSequence from "@/components/sections/BootSequence";
+import Header from "@/components/layout/Header";
+import CustomCursor from "@/components/effects/CustomCursor";
+import FilmGrain from "@/components/effects/FilmGrain";
 
-/**
- * Archivo: a tight, muscular grotesk in the Neue Montreal /
- * Helvetica Now register — and free. To swap in a licensed cut
- * later, replace this with `next/font/local` and keep the
- * `--font-archivo` variable name; nothing else has to change.
- */
-const grotesk = Archivo({
+const anton = Anton({
+  weight: "400",
   subsets: ["latin", "latin-ext"],
-  weight: ["400", "500", "700", "800", "900"],
-  variable: "--font-archivo",
+  variable: "--font-anton",
   display: "swap",
 });
 
-const mono = JetBrains_Mono({
+const grotesk = Space_Grotesk({
   subsets: ["latin", "latin-ext"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-jbmono",
+  variable: "--font-grotesk",
   display: "swap",
 });
 
-const pageTitle = `${siteConfig.name} — ${siteConfig.role}`;
+const jetbrains = JetBrains_Mono({
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-jetbrains",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteConfig.url),
-  title: pageTitle,
-  description: siteConfig.description,
-  keywords: [...siteConfig.keywords],
-  authors: [{ name: siteConfig.name, url: siteConfig.url }],
-  creator: siteConfig.name,
-  publisher: siteConfig.name,
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
+  metadataBase: new URL(site.url),
+  title: site.title,
+  description: site.description,
+  keywords: [...site.keywords],
+  authors: [{ name: site.name, url: site.url }],
+  creator: site.name,
+  alternates: { canonical: "/" },
   openGraph: {
     type: "website",
-    locale: siteConfig.locale,
-    url: siteConfig.url,
-    siteName: siteConfig.name,
-    title: pageTitle,
-    description: siteConfig.description,
+    url: site.url,
+    title: site.title,
+    description: site.description,
+    siteName: site.name,
+    locale: site.locale,
   },
   twitter: {
     card: "summary_large_image",
-    title: pageTitle,
-    description: siteConfig.description,
+    title: site.title,
+    description: site.description,
   },
-  alternates: {
-    canonical: siteConfig.url,
-  },
+  robots: { index: true, follow: true },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#000000",
-  width: "device-width",
-  initialScale: 1,
-};
-
-const personJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Person",
-  name: siteConfig.name,
-  jobTitle: siteConfig.role,
-  email: `mailto:${siteConfig.email}`,
-  url: siteConfig.url,
-  address: {
-    "@type": "PostalAddress",
-    addressLocality: "Kocaeli",
-    addressCountry: "TR",
-  },
-  sameAs: [siteConfig.social.github, siteConfig.social.linkedin],
-  knowsAbout: [...siteConfig.keywords],
-  worksFor: {
-    "@type": "Organization",
-    name: "Mecode Bilişim",
-  },
+  themeColor: "#060606",
+  colorScheme: "dark",
 };
 
 export default function RootLayout({
@@ -96,15 +64,19 @@ export default function RootLayout({
   return (
     <html
       lang="tr"
-      className={`${grotesk.variable} ${mono.variable}`}
+      className={`${anton.variable} ${grotesk.variable} ${jetbrains.variable} antialiased`}
     >
-      <body>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
-        />
-        {children}
-        <CustomCursor />
+      <body className="bg-ink text-paper">
+        <noscript>
+          <style>{".boot-overlay{display:none}"}</style>
+        </noscript>
+        <SmoothScroll>
+          <BootSequence />
+          <Header />
+          {children}
+          <CustomCursor />
+          <FilmGrain />
+        </SmoothScroll>
       </body>
     </html>
   );

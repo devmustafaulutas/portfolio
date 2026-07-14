@@ -5,16 +5,6 @@ import nextTs from "eslint-config-next/typescript";
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
-  {
-    rules: {
-      // These rules are often too noisy/strict for real-world UI codebases
-      // and can block shipping. We keep core-web-vitals + TS rules.
-      "react/no-unescaped-entities": "off",
-      "react-hooks/set-state-in-effect": "off",
-      "react-hooks/refs": "off",
-      "import/no-anonymous-default-export": "off",
-    },
-  },
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:

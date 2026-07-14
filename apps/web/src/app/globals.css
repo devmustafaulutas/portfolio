@@ -1,775 +1,195 @@
 @import "tailwindcss";
 
 /* ============================================================
-   MONOCHROME SUPREMACY — design tokens
-   Pure black, pure white, technical greys. Nothing else.
+   MONOKROM SÜPREMASİ · tasarım dili
+   Saf siyah, saf beyaz, kâğıt, kemik, sis. Renk yok.
    ============================================================ */
 
 @theme inline {
-  --font-grotesk: var(--font-archivo), "Helvetica Neue", Arial, sans-serif;
-  --font-mono: var(--font-jbmono), ui-monospace, "Cascadia Code", monospace;
+  --color-ink: #060606;
+  --color-coal: #101010;
+  --color-paper: #f2f0ea;
+  --color-bone: #e4e1d8;
+  --color-fog: #8f8f88;
+  --color-smoke: #55554f;
 
-  --color-bg: #000000;
-  --color-fg: #ffffff;
-  --color-mute: #9b9b9b;
-  --color-faint: #4c4c4c;
-  --color-panel: #0a0a0a;
-  --color-line: rgba(255, 255, 255, 0.14);
-  --color-line-soft: rgba(255, 255, 255, 0.07);
-}
+  --font-display: var(--font-anton), "Arial Narrow", sans-serif;
+  --font-body: var(--font-grotesk), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 
-/* ============================================================
-   Base
-   ============================================================ */
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-soft: cubic-bezier(0.33, 1, 0.68, 1);
 }
 
 html {
-  color-scheme: dark;
-  scrollbar-gutter: stable;
-}
-
-html.lenis,
-html.lenis body {
-  height: auto;
-}
-
-.lenis.lenis-smooth {
-  scroll-behavior: auto !important;
-}
-
-.lenis.lenis-stopped {
-  overflow: hidden;
+  background: var(--color-ink);
+  color: var(--color-paper);
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-smoke) var(--color-ink);
 }
 
 body {
-  background-color: var(--color-bg);
-  color: var(--color-fg);
-  font-family: var(--font-grotesk);
-  font-size: 16px;
-  line-height: 1.6;
-  overflow-x: hidden;
+  font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-}
-
-/* Difference-blend custom cursor owns the pointer on fine devices */
-@media (pointer: fine) {
-  body {
-    cursor: none;
-  }
-  body a,
-  body button {
-    cursor: none;
-  }
+  overflow-x: clip;
 }
 
 ::selection {
-  background: #ffffff;
-  color: #000000;
+  background: var(--color-paper);
+  color: var(--color-ink);
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-fg);
+  outline: 2px solid currentColor;
   outline-offset: 3px;
 }
 
-::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--color-bg);
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.28);
-  border-radius: 99px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.55);
-}
-
-/* Film grain — always on, barely there. Cinema, not noise. */
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 90;
-  pointer-events: none;
-  opacity: 0.06;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 180px 180px;
-}
-
-/* ============================================================
-   Typography voices
-   ============================================================ */
-
-/* Archivo carries proper Turkish İ/ı glyphs, so locale-aware CSS
-   uppercasing is safe here. line-height ≥ 1.02 keeps İ dots inside
-   SplitText mask boxes (they clip at the line box). */
-.type-display {
-  font-family: var(--font-grotesk);
-  font-weight: 800;
-  line-height: 1.02;
-  letter-spacing: -0.03em;
-  text-transform: uppercase;
-}
-
-.type-mono {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  font-weight: 500;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--color-mute);
-}
-
-.type-mono-bright {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--color-fg);
-}
-
-.text-outline-w {
-  color: transparent;
-  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.65);
-}
-
-/* ============================================================
-   Fixed chrome
-   ============================================================ */
-
-.experience-canvas {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-}
-
-.site-progress {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 80;
-  height: 2px;
-  background: #ffffff;
-  transform-origin: left center;
-  transform: scaleX(0);
-  pointer-events: none;
-}
-
-.hud-corner {
-  position: fixed;
-  z-index: 70;
-  pointer-events: none;
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  font-weight: 500;
-  letter-spacing: 0.26em;
-  text-transform: uppercase;
-  color: var(--color-faint);
-}
-
-.custom-cursor {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 100;
-  width: 12px;
-  height: 12px;
-  border-radius: 999px;
-  background: #ffffff;
-  pointer-events: none;
-  mix-blend-mode: difference;
-  will-change: transform;
-}
-
-@media (pointer: coarse) {
-  .custom-cursor {
-    display: none;
+/* Özel imleç aktifken yerel imleci gizle (yalnızca fine pointer) */
+@media (pointer: fine) {
+  html.cursor-live,
+  html.cursor-live a,
+  html.cursor-live button {
+    cursor: none;
   }
 }
 
-/* ============================================================
-   Preloader — the proof print
-   ============================================================ */
-
-.preloader {
-  position: fixed;
-  inset: 0;
-  z-index: 95;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #000000;
-  will-change: transform;
+/* ------------------------------------------------------------
+   Kontur tipografi · dev hayalet başlıklar için
+   ------------------------------------------------------------ */
+@utility text-outline {
+  -webkit-text-stroke: 1px currentColor;
+  -webkit-text-fill-color: transparent;
 }
 
-.preloader-toc {
-  font-family: var(--font-grotesk);
-  font-weight: 800;
-  font-size: clamp(1.6rem, 5vw, 3rem);
-  line-height: 1.04;
-  letter-spacing: -0.02em;
-  text-transform: uppercase;
-  color: var(--color-fg);
-  white-space: nowrap;
+@utility text-outline-thin {
+  -webkit-text-stroke: 1px color-mix(in srgb, currentColor 35%, transparent);
+  -webkit-text-fill-color: transparent;
 }
 
-.preloader-rule {
+/* ------------------------------------------------------------
+   Satır maskesi · maskeli başlıklarda İ noktası / Ş çengeli
+   gibi taşan glifler kırpılmasın diye klip alanı padding ile
+   genişletilir, negatif margin görsel aralığı korur.
+   ------------------------------------------------------------ */
+@utility line-mask {
   display: block;
-  width: 100%;
-  height: 1px;
-  background: #ffffff;
-  transform: scaleX(0);
-  transform-origin: left center;
+  overflow: hidden;
+  padding-block: 0.14em;
+  margin-block: -0.14em;
 }
 
-/* ============================================================
-   The Technical Print — structural chrome
-   ============================================================ */
-
-.ghost-index {
-  position: absolute;
-  right: clamp(0.5rem, 3vw, 2.5rem);
-  top: clamp(4rem, 10vh, 7rem);
-  z-index: -1;
-  font-family: var(--font-grotesk);
-  font-weight: 800;
-  font-size: clamp(8rem, 24vw, 22rem);
-  line-height: 1;
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.09);
+/* ------------------------------------------------------------
+   Film greni · SVG feTurbulence, transform ile adım animasyonu
+   ------------------------------------------------------------ */
+.film-grain {
+  position: fixed;
+  top: -60%;
+  left: -60%;
+  width: 220%;
+  height: 220%;
   pointer-events: none;
-  user-select: none;
+  z-index: 80;
+  opacity: 0.055;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+  animation: grain-shift 1.2s steps(6) infinite;
 }
 
-.section-head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 0.75rem 2rem;
-  border-top: 1px solid var(--color-line);
-  padding-top: 0.85rem;
-  margin-bottom: 1.75rem;
+@keyframes grain-shift {
+  0% { transform: translate3d(0, 0, 0); }
+  20% { transform: translate3d(-3%, 2%, 0); }
+  40% { transform: translate3d(2%, -3%, 0); }
+  60% { transform: translate3d(-2%, -2%, 0); }
+  80% { transform: translate3d(3%, 3%, 0); }
+  100% { transform: translate3d(0, 0, 0); }
 }
 
-.hero-mark {
-  font-size: 0.32em;
-  vertical-align: super;
-  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.65);
+/* ------------------------------------------------------------
+   Vaka dosyası akordeonu · grid-template-rows tekniği
+   (yükseklik ölçümü yok, tersine çevrilebilir, ucuz)
+   ------------------------------------------------------------ */
+.file-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.7s var(--ease-expo);
 }
 
+.file-body > .file-body-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.file-open .file-body {
+  grid-template-rows: 1fr;
+}
+
+/* Mimari diyagram çizgileri · dosya açılınca çizilir */
+.file-diagram path,
+.file-diagram line {
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  transition: stroke-dashoffset 1.4s var(--ease-soft) 0.25s;
+}
+
+.file-diagram rect,
+.file-diagram text {
+  opacity: 0;
+  transition: opacity 0.6s var(--ease-soft) 0.45s;
+}
+
+.file-open .file-diagram path,
+.file-open .file-diagram line {
+  stroke-dashoffset: 0;
+}
+
+.file-open .file-diagram rect,
+.file-open .file-diagram text {
+  opacity: 1;
+}
+
+/* ------------------------------------------------------------
+   Canlı durum noktası · monokrom nabız
+   ------------------------------------------------------------ */
 .pulse-dot {
-  display: inline-block;
-  width: 7px;
-  height: 7px;
-  border-radius: 999px;
-  background: #ffffff;
-  animation: pulse-dot 1.8s ease-in-out infinite;
-}
-
-@keyframes pulse-dot {
-  0%,
-  100% {
-    opacity: 1;
-    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
-  }
-  50% {
-    opacity: 0.55;
-    box-shadow: 0 0 0 5px rgba(255, 255, 255, 0);
-  }
-}
-
-.hud-divider {
-  color: var(--color-faint);
-}
-
-.grid-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 85;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.35s ease;
-  background-image: repeating-linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0.07) 0 1px,
-    transparent 1px calc((100% - 11px) / 12 + 1px)
-  );
-  margin-inline: clamp(1.25rem, 4vw, 2.5rem);
-}
-
-.grid-overlay[data-visible="true"] {
-  opacity: 1;
-}
-
-[data-skew] {
-  will-change: transform;
-}
-
-/* ============================================================
-   Hero typography
-   ============================================================ */
-
-.hero-name {
-  font-size: clamp(3.4rem, 15.5vw, 14rem);
-  line-height: 0.94;
-  white-space: nowrap;
-  will-change: letter-spacing, transform;
-}
-
-.hero-name .char {
-  will-change: transform, opacity;
-}
-
-.hero-manifesto-line {
-  font-family: var(--font-grotesk);
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: -0.02em;
-  line-height: 1.08;
-  font-size: clamp(1.7rem, 4.6vw, 4.2rem);
-}
-
-.scroll-cue-bar {
-  width: 1px;
-  height: 56px;
-  background: linear-gradient(180deg, transparent, #ffffff);
-  transform-origin: top center;
-}
-
-/* ============================================================
-   Manifesto — dark-to-light line reveal
-   ============================================================ */
-
-.manifesto-par {
-  font-size: clamp(1.25rem, 2.5vw, 2.15rem);
-  font-weight: 500;
-  line-height: 1.55;
-  letter-spacing: -0.015em;
-  color: var(--color-fg);
-  max-width: 62ch;
-}
-
-.manifesto-par .line {
-  will-change: opacity;
-}
-
-/* ============================================================
-   Experience accordion — screen-wide, invertible rows
-   ============================================================ */
-
-.acc-row {
-  border-top: 1px solid var(--color-line);
-  background: var(--color-bg);
-  color: var(--color-fg);
-  transition: background-color 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-    color 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.acc-row:last-child {
-  border-bottom: 1px solid var(--color-line);
-}
-
-.acc-row[data-open="true"] {
-  background: #ffffff;
-  color: #000000;
-}
-
-.acc-head {
-  display: grid;
-  width: 100%;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: clamp(1rem, 3vw, 2.5rem);
-  padding: clamp(1.1rem, 3vw, 2rem) clamp(1.25rem, 4vw, 2.5rem);
-  background: transparent;
-  border: 0;
-  color: inherit;
-  text-align: left;
-}
-
-.acc-index {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  color: var(--color-faint);
-}
-
-.acc-row[data-open="true"] .acc-index {
-  color: rgba(0, 0, 0, 0.45);
-}
-
-.acc-title {
-  font-family: var(--font-grotesk);
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: -0.025em;
-  line-height: 1.04;
-  font-size: clamp(1.6rem, 5.2vw, 4.6rem);
-}
-
-.acc-meta {
-  font-family: var(--font-mono);
-  font-size: 0.66rem;
-  font-weight: 500;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--color-mute);
-}
-
-.acc-row[data-open="true"] .acc-meta {
-  color: rgba(0, 0, 0, 0.6);
-}
-
-.acc-icon {
   position: relative;
-  width: 30px;
-  height: 30px;
-  flex-shrink: 0;
-}
-
-.acc-icon::before,
-.acc-icon::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 100%;
-  height: 2px;
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
   background: currentColor;
-  transform: translate(-50%, -50%);
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.acc-icon::after {
-  transform: translate(-50%, -50%) rotate(90deg);
-}
-
-.acc-row[data-open="true"] .acc-icon::after {
-  transform: translate(-50%, -50%) rotate(0deg);
-}
-
-.acc-panel {
-  overflow: hidden;
-  height: 0;
-}
-
-.acc-body {
-  display: grid;
-  gap: clamp(1.5rem, 4vw, 3rem);
-  padding: 0 clamp(1.25rem, 4vw, 2.5rem) clamp(2rem, 5vw, 3.5rem);
-}
-
-@media (min-width: 1024px) {
-  .acc-body {
-    grid-template-columns: minmax(0, 1.5fr) minmax(0, 0.5fr);
-  }
-}
-
-.acc-case {
-  font-size: clamp(0.98rem, 1.35vw, 1.15rem);
-  line-height: 1.75;
-  font-weight: 500;
-}
-
-.acc-row[data-open="true"] .acc-case {
-  color: rgba(0, 0, 0, 0.82);
-}
-
-.acc-headline {
-  font-family: var(--font-grotesk);
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: -0.02em;
-  line-height: 1.1;
-  font-size: clamp(1.15rem, 2.4vw, 1.9rem);
-}
-
-.acc-tag {
-  display: inline-block;
+.pulse-dot::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 9999px;
   border: 1px solid currentColor;
-  border-radius: 999px;
-  padding: 0.32rem 0.75rem;
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  opacity: 0.75;
+  animation: pulse-ring 2.2s var(--ease-soft) infinite;
 }
 
-/* ============================================================
-   Magnetic showcase — hover-to-reveal follower
-   ============================================================ */
-
-.show-row {
-  position: relative;
-  display: flex;
-  align-items: baseline;
-  gap: clamp(1rem, 3vw, 2.5rem);
-  padding: clamp(1.4rem, 3.6vw, 2.6rem) clamp(1.25rem, 4vw, 2.5rem);
-  border-top: 1px solid var(--color-line);
-  text-decoration: none;
-  color: inherit;
+@keyframes pulse-ring {
+  0% { transform: scale(0.4); opacity: 0.9; }
+  80% { transform: scale(1.6); opacity: 0; }
+  100% { transform: scale(1.6); opacity: 0; }
 }
 
-.show-row:last-of-type {
-  border-bottom: 1px solid var(--color-line);
-}
-
-.show-name {
-  font-family: var(--font-grotesk);
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: -0.025em;
-  line-height: 1;
-  font-size: clamp(2.1rem, 7vw, 6.2rem);
-  color: transparent;
-  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.55);
-  transition: color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-    -webkit-text-stroke-color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform;
-}
-
-.show-row:hover .show-name,
-.show-row:focus-visible .show-name {
-  color: #ffffff;
-  -webkit-text-stroke-color: transparent;
-}
-
-.show-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  margin-left: auto;
-  text-align: right;
-}
-
-.show-arrow {
-  font-family: var(--font-mono);
-  font-size: clamp(1.1rem, 2.4vw, 1.8rem);
-  color: var(--color-faint);
-  transform: translate(-6px, 6px);
-  opacity: 0;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-    opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-    color 0.4s ease;
-}
-
-.show-row:hover .show-arrow,
-.show-row:focus-visible .show-arrow {
-  transform: translate(0, 0);
-  opacity: 1;
-  color: var(--color-fg);
-}
-
-.follower {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 60;
-  width: min(26rem, 42vw);
-  height: min(17rem, 28vw);
-  pointer-events: none;
-  opacity: 0;
-  transform: scale(0.85);
-  overflow: hidden;
-  will-change: transform, opacity;
-}
-
-.follower::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  opacity: 0.35;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 140px 140px;
-  mix-blend-mode: overlay;
-}
-
-.follower[data-pattern="grid"] {
-  background:
-    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.16) 0 1px, transparent 1px 44px),
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.16) 0 1px, transparent 1px 44px),
-    linear-gradient(140deg, #1a1a1a, #050505);
-}
-
-.follower[data-pattern="waves"] {
-  background:
-    repeating-radial-gradient(circle at 30% 40%, rgba(255, 255, 255, 0.14) 0 2px, transparent 2px 34px),
-    linear-gradient(160deg, #222222, #000000);
-}
-
-.follower[data-pattern="beams"] {
-  background:
-    repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.2) 0 2px, transparent 2px 56px),
-    linear-gradient(200deg, #161616, #030303);
-}
-
-.follower[data-pattern="halftone"] {
-  background-image:
-    radial-gradient(rgba(255, 255, 255, 0.28) 1.5px, transparent 1.5px),
-    linear-gradient(150deg, #1d1d1d, #000000);
-  background-size: 18px 18px, 100% 100%;
-}
-
-.follower-label {
-  position: absolute;
-  left: 1rem;
-  bottom: 0.9rem;
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.85);
-}
-
-/* ============================================================
-   Magnetic button + contact
-   ============================================================ */
-
-.magnetic-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 999px;
-  padding: 1.15rem 2.4rem;
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--color-fg);
-  background: transparent;
-  text-decoration: none;
-  overflow: hidden;
-  position: relative;
-  will-change: transform;
-  transition: color 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-    border-color 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.magnetic-btn::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: #ffffff;
-  transform: scaleY(0);
-  transform-origin: bottom center;
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-  z-index: -1;
-}
-
-.magnetic-btn:hover {
-  color: #000000;
-  border-color: #ffffff;
-}
-
-.magnetic-btn:hover::before {
-  transform: scaleY(1);
-}
-
-.contact-mail {
-  font-family: var(--font-grotesk);
-  font-weight: 800;
-  font-size: clamp(1.5rem, 5.4vw, 4.6rem);
-  line-height: 1.05;
-  letter-spacing: -0.02em;
-  color: var(--color-fg);
-  text-decoration: none;
-  position: relative;
-  display: inline-block;
-}
-
-.contact-mail::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -0.08em;
-  height: 2px;
-  background: #ffffff;
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.contact-mail:hover::after {
-  transform: scaleX(1);
-}
-
-.footer-link {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--color-mute);
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.footer-link:hover {
-  color: var(--color-fg);
-}
-
-/* ============================================================
-   Reduced motion — everything readable, nothing mandatory
-   ============================================================ */
-
+/* ------------------------------------------------------------
+   Hareket azaltma · sinematik her şey kapanır, içerik kalır
+   ------------------------------------------------------------ */
 @media (prefers-reduced-motion: reduce) {
+  .boot-overlay {
+    display: none !important;
+  }
+
+  .film-grain {
+    animation: none;
+  }
+
   *,
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
-  }
-
-  .site-progress,
-  .custom-cursor,
-  .follower {
-    display: none;
-  }
-
-  .pulse-dot {
-    animation: none;
-  }
-
-  .grid-overlay {
-    display: none;
-  }
-
-  .experience-canvas {
-    opacity: 0.3;
-  }
-
-  body {
-    cursor: auto;
-  }
-
-  .show-name {
-    color: #ffffff;
-    -webkit-text-stroke-color: transparent;
+    scroll-behavior: auto !important;
   }
 }
